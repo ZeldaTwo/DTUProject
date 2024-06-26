@@ -17,15 +17,37 @@
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="92" Height="33" Content="Le vitrage est :" Margin="25,10,0,0"/>
+        <Label x:Name="Windlbl" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="127" Height="33" Content="La Région de vent :" Visibility="Hidden" Margin="25,123,0,0"/>
+        <Label Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="126" Height="33" Content="Le chantier est :" Margin="25,66,0,0"/>
+
         <CheckBox x:Name="insidecheckbx"  Checked="insidecheckbx_Checked" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Content= "en intérieur"  Margin="147,43,0,0" />
-        <CheckBox x:Name="outisdecheckbx" Checked="outisdecheckbx_Checked"  Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Content= "en extérieur"  Margin="32,43,0,0" />
-        <Button x:Name="Cancel_Button" Content="Annulez les infos" Grid.Column="0" Grid.Row="0" Height="30" Width="120" Margin="255,21,25,166" Click="Cancel_Button_Click"/>
+        <CheckBox x:Name="outsidecheckbx" Checked="outisdecheckbx_Checked"  Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Content= "en extérieur"  Margin="32,43,0,0" />
+
+        <CheckBox x:Name="Francecheckbx"  Checked="Francecheckbx_Checked"  Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Content= "en France"  Margin="147,99,0,0" />
+        <CheckBox x:Name="OutreMercheckbx" Checked="OutreMercheckbx_Checked"  Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Content= "en Outre-Mer"  Margin="32,99,0,0" />
+
+        <ComboBox x:Name="Regioncbx" Grid.Column="0" Grid.Row="0" Width="40" HorizontalAlignment="Left" Margin="71,150,0,28" Visibility="Hidden">
+            <ComboBoxItem Content="1" TabIndex="0"/>
+            <ComboBoxItem Content="2" TabIndex="1"/>
+            <ComboBoxItem Content="3" TabIndex="2"/>
+            <ComboBoxItem Content="4" TabIndex="3"/>
+        </ComboBox>
+
+        <ComboBox x:Name="RegionOutreMercbx" Grid.Column="0" Grid.Row="0" Width="150" HorizontalAlignment="Left" Margin="71,150,0,28" Visibility="Hidden">
+            <ComboBoxItem Content="Guadeloupe" TabIndex="0"/>
+            <ComboBoxItem Content="Guyane" TabIndex="1"/>
+            <ComboBoxItem Content="Martinique" TabIndex="2"/>
+            <ComboBoxItem Content="Réunion" TabIndex="3"/>
+        </ComboBox>
+
+        <Button x:Name="Cancel_Button" Content="Annulez les infos" Grid.Column="0" Grid.Row="0" Margin="266,17,21,166" Click="Cancel_Button_Click"/>
+
 
         <!--Button Question Mark-->
-        <Button x:Name="HelpButton" Width="20" Height="20"
-                HorizontalAlignment="Center" VerticalAlignment="Center"
+        <Button x:Name="HelpButton" Width="20" Height="20" Visibility="Hidden"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
                 Background="LightYellow" BorderBrush="Black" BorderThickness="1"
-                ToolTip="Cliquez ici pour afficher les régions de vent de la France métropolitaine" Click="HelpButton_Click" >
+                ToolTip="Cliquez ici pour afficher les régions de vent de la France métropolitaine" Click="HelpButton_Click" Margin="138,127,0,0" >
             <Button.Template>
                 <ControlTemplate TargetType="Button">
                     <Grid>
@@ -35,5 +57,6 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
+        
     </Grid>
 </Window>
