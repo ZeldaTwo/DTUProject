@@ -1,0 +1,18 @@
+﻿<Window x:Class="GlassMetalProj.HelperWindowMultiImages"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GlassMetalProj"
+        mc:Ignorable="d"
+        Title="HelperWindowMultiImages" Height="300" Width="1200">
+    <Grid>
+        <UniformGrid Rows="1" Columns="5">
+            <Image x:Name="Image1" Stretch="Uniform"/>
+            <Image x:Name="Image2" Stretch="Uniform"/>
+            <Image x:Name="Image3" Stretch="Uniform"/>
+            <Image x:Name="Image4" Stretch="Uniform"/>
+            <Image x:Name="Image5" Stretch="Uniform"/>
+        </UniformGrid>
+    </Grid>
+</Window>

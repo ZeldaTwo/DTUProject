@@ -18,6 +18,7 @@ namespace GlassMetalProj
         private double[,] windPressure = new double[40, 5];
 
         public bool vitrageoutside = true;
+        public bool inFrance = true;
 
         public FilledInfos(string path) 
         {
@@ -32,6 +33,8 @@ namespace GlassMetalProj
         {
             if (vitrageoutside)
             {
+                if (!inFrance)
+                    IndexRegion += 4;
                 // To get the region index, we need to multiply by 5 because there are 5 type of field by region, and we add the index fieldtype.
                 int i = IndexRegion * 5 + IndexFieldType;
                 int j = IndexHeight;

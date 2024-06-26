@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GlassMetalProj"
         mc:Ignorable="d"
-        Title="WorkingWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen" >
+        Title="WorkingWindow" Height="650" Width="1100" WindowStartupLocation="CenterScreen" >
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="50*"/>
@@ -16,31 +16,51 @@
             <RowDefinition Height="50*"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="92" Height="33" Content="Le vitrage est :" Margin="25,10,0,0"/>
+        <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="92" Height="33" Content="Le vitrage est :" Margin="8,10,0,0"/>
         <Label x:Name="Windlbl" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="127" Height="33" Content="La Région de vent :" Visibility="Hidden" Margin="25,123,0,0"/>
-        <Label Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="126" Height="33" Content="Le chantier est :" Margin="25,66,0,0"/>
+        <Label Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="126" Height="33" Content="Le chantier est :" Margin="8,66,0,0"/>
+        <Label Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="168" Height="33" Content="La catégorie du terrain est :" Margin="32,201,0,0" Grid.RowSpan="2"/>
+        <Label Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="168" Height="33" Content="La hauteur du vitrage est :" Margin="32,284,0,0"/>
 
-        <CheckBox x:Name="insidecheckbx"  Checked="insidecheckbx_Checked" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Content= "en intérieur"  Margin="147,43,0,0" />
-        <CheckBox x:Name="outsidecheckbx" Checked="outisdecheckbx_Checked"  Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Content= "en extérieur"  Margin="32,43,0,0" />
 
-        <CheckBox x:Name="Francecheckbx"  Checked="Francecheckbx_Checked"  Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Content= "en France"  Margin="147,99,0,0" />
-        <CheckBox x:Name="OutreMercheckbx" Checked="OutreMercheckbx_Checked"  Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Content= "en Outre-Mer"  Margin="32,99,0,0" />
+        <CheckBox x:Name="insidecheckbx"  Checked="insidecheckbx_Checked" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Content= "en intérieur"  Margin="130,43,0,0" />
+        <CheckBox x:Name="outsidecheckbx" Checked="outisdecheckbx_Checked"  Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Content= "en extérieur"  Margin="15,43,0,0" />
 
-        <ComboBox x:Name="Regioncbx" Grid.Column="0" Grid.Row="0" Width="40" HorizontalAlignment="Left" Margin="71,150,0,28" Visibility="Hidden">
-            <ComboBoxItem Content="1" TabIndex="0"/>
-            <ComboBoxItem Content="2" TabIndex="1"/>
-            <ComboBoxItem Content="3" TabIndex="2"/>
-            <ComboBoxItem Content="4" TabIndex="3"/>
+        <CheckBox x:Name="Francecheckbx"  Checked="Francecheckbx_Checked"  Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Content= "en France"  Margin="130,99,0,0" />
+        <CheckBox x:Name="OutreMercheckbx" Checked="OutreMercheckbx_Checked"  Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Content= "en Outre-Mer"  Margin="15,99,0,0" />
+
+        <ComboBox x:Name="Regioncbx" Grid.Column="0" Grid.Row="0" Width="40" Height="40" HorizontalAlignment="Left" Margin="71,150,0,28" Visibility="Hidden"  SelectionChanged="Regioncbx_SelectionChanged" >
+            <ComboBoxItem Content="1" />
+            <ComboBoxItem Content="2" />
+            <ComboBoxItem Content="3" />
+            <ComboBoxItem Content="4" />
         </ComboBox>
 
-        <ComboBox x:Name="RegionOutreMercbx" Grid.Column="0" Grid.Row="0" Width="150" HorizontalAlignment="Left" Margin="71,150,0,28" Visibility="Hidden">
-            <ComboBoxItem Content="Guadeloupe" TabIndex="0"/>
-            <ComboBoxItem Content="Guyane" TabIndex="1"/>
-            <ComboBoxItem Content="Martinique" TabIndex="2"/>
-            <ComboBoxItem Content="Réunion" TabIndex="3"/>
+        <ComboBox x:Name="RegionOutreMercbx" Grid.Column="0" Grid.Row="0" Height="40" Width="150" HorizontalAlignment="Left" Margin="71,150,0,28" Visibility="Hidden" SelectionChanged="RegionOutreMercbx_SelectionChanged">
+            <ComboBoxItem Content="Guadeloupe" />
+            <ComboBoxItem Content="Guyane" />
+            <ComboBoxItem Content="Martinique" />
+            <ComboBoxItem Content="Réunion" />
         </ComboBox>
 
-        <Button x:Name="Cancel_Button" Content="Annulez les infos" Grid.Column="0" Grid.Row="0" Margin="266,17,21,166" Click="Cancel_Button_Click"/>
+        <ComboBox Name="FieldTypecbx"  Grid.Column="0" Width="60" Height="40" Margin="86,234,404,43" SelectionChanged="FieldTypecbx_SelectionChanged" >
+            <ComboBoxItem Content="IV"/>
+            <ComboBoxItem Content="IIIb"/>
+            <ComboBoxItem Content="IIIa"/>
+            <ComboBoxItem Content="II"/>
+            <ComboBoxItem Content="0"/>
+        </ComboBox>
+
+        <ComboBox Name="Heightcbx"  Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Height="35" Margin="38,11,287,0" SelectionChanged="Heightcbx_SelectionChanged" >
+            <ComboBoxItem Content="H ≤ 9m "/>
+            <ComboBoxItem Content="9 &lt; H ≤ 18m"/>
+            <ComboBoxItem Content="18 &lt; H ≤ 28m"/>
+            <ComboBoxItem Content="28 &lt; H ≤ 50m"/>
+            <ComboBoxItem Content="50 &lt; H ≤ 100m"/>
+            <ComboBoxItem Content="H > 100m"/>
+        </ComboBox>
+
+        <Button x:Name="Cancel_Button" Height="40" Width="100" Content="Annulez les infos" Grid.Column="0" Grid.Row="0" Margin="348,25,102,252" Click="Cancel_Button_Click"/>
 
 
         <!--Button Question Mark-->
@@ -57,6 +77,24 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        
+
+        <!--Button Question Mark-->
+        <Button x:Name="HelpButton2" Width="20" Height="20" Visibility="Visible"
+        HorizontalAlignment="Left" VerticalAlignment="Top"
+        Background="LightYellow" BorderBrush="Black" BorderThickness="1"
+        ToolTip="Cliquez ici pour afficher les différents types de catégories de terrain" Click="HelpButton2_Click"  Margin="187,205,0,0" >
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <Ellipse Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding BorderThickness}"/>
+                        <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold"/>
+                    </Grid>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+
+        <Button x:Name="Calculatepressure" Content="Calculate Pressure" Grid.Column="0" Grid.Row="1" Width="120" Height="40" Margin="351,8,79,269" Click="Calculatepressure_Click" />
+
+
     </Grid>
 </Window>

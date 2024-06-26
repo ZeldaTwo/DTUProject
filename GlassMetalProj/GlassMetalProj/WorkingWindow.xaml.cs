@@ -37,6 +37,23 @@ namespace GlassMetalProj
             helperWindow.Show();
         }
 
+        private void HelpButton2_Click(object sender, RoutedEventArgs e)
+        {
+            HelperWindowMultiImages imagesWindow = new HelperWindowMultiImages();
+
+            // Chemins relatifs aux images dans le dossier du projet
+            string[] imagePaths = {
+                "Images/R0.png",
+                "Images/R2.png",
+                "Images/R3a.png",
+                "Images/R3b.png",
+                "Images/R4.png"
+            };
+
+            imagesWindow.SetImages(imagePaths);
+            imagesWindow.Show();
+        }
+
         private void insidecheckbx_Checked(object sender, RoutedEventArgs e)
         {
             if (insidecheckbx.IsChecked == true) 
@@ -71,6 +88,7 @@ namespace GlassMetalProj
             OutreMercheckbx.IsChecked = false;
             Francecheckbx.IsEnabled = true;
             OutreMercheckbx.IsEnabled= true;
+            FilledInfos.inFrance = true; 
         }
 
         private void CancelcbxFranceOutreMer() 
@@ -81,6 +99,7 @@ namespace GlassMetalProj
             RegionOutreMercbx.Text = null;
             Regioncbx.Visibility = Visibility.Hidden;
             RegionOutreMercbx.Visibility = Visibility.Hidden;
+            FilledInfos.IndexRegion = -1;
         }
 
         private void Cancel_Button_Click(object sender, RoutedEventArgs e)
@@ -92,20 +111,62 @@ namespace GlassMetalProj
 
         private void Francecheckbx_Checked(object sender, RoutedEventArgs e)
         {
-            Francecheckbx.IsEnabled = false;
-            OutreMercheckbx.IsEnabled = false;
-            Windlbl.Visibility = Visibility.Visible;
-            Regioncbx.Visibility = Visibility.Visible;
-            HelpButton.Visibility = Visibility.Visible;
-
+            if (!(bool)insidecheckbx.IsChecked && !(bool)outsidecheckbx.IsChecked) 
+            {
+                MessageBox.Show("Cocher les cases dans le bon ordre (de haut en bas)");
+                Francecheckbx.IsChecked = false;
+            }
+            else 
+            {
+                Francecheckbx.IsEnabled = false;
+                OutreMercheckbx.IsEnabled = false;
+                Windlbl.Visibility = Visibility.Visible;
+                Regioncbx.Visibility = Visibility.Visible;
+                HelpButton.Visibility = Visibility.Visible;
+            }
         }
 
         private void OutreMercheckbx_Checked(object sender, RoutedEventArgs e)
         {
-            Francecheckbx.IsEnabled = false;
-            OutreMercheckbx.IsEnabled = false;
-            Windlbl.Visibility= Visibility.Visible;
-            RegionOutreMercbx.Visibility = Visibility.Visible;
+            if (!(bool)insidecheckbx.IsChecked && !(bool)outsidecheckbx.IsChecked)
+            {
+                MessageBox.Show("Cocher les cases dans le bon ordre (de haut en bas)");
+                OutreMercheckbx.IsChecked = false;
+            }
+            else 
+            {
+                Francecheckbx.IsEnabled = false;
+                OutreMercheckbx.IsEnabled = false;
+                Windlbl.Visibility = Visibility.Visible;
+                RegionOutreMercbx.Visibility = Visibility.Visible;
+                FilledInfos.inFrance = false;
+            }
         }
+
+        private void Regioncbx_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FilledInfos.IndexRegion = Regioncbx.SelectedIndex;
+        }
+
+        private void RegionOutreMercbx_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FilledInfos.IndexRegion = RegionOutreMercbx.SelectedIndex;
+        }
+
+        private void FieldTypecbx_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FilledInfos.IndexFieldType = FieldTypecbx.SelectedIndex;
+        }
+
+        private void Heightcbx_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FilledInfos.IndexHeight = Heightcbx.SelectedIndex;
+        }
+
+        private void Calculatepressure_Click(object sender, RoutedEventArgs e)
+        {
+            FilledInfos.CalculatePressure();
+            MessageBox.Show("The Pressure is :" + FilledInfos.Pressure);
+        }        
     }
 }
