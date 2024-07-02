@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ControlzEx.Theming;
+using MahApps.Metro.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,14 +22,14 @@ namespace GlassMetalProj
     /// 
 
 
-    public partial class WorkingWindow : Window
+    public partial class WorkingWindow : MetroWindow
     {
         private FilledInfos FilledInfos;
 
         public WorkingWindow()
         {
             InitializeComponent();
-            FilledInfos = new FilledInfos("");
+            FilledInfos = new FilledInfos("","");
         }
 
         private void HelpButton_Click(object sender, RoutedEventArgs e)
@@ -56,23 +58,23 @@ namespace GlassMetalProj
 
         private void insidecheckbx_Checked(object sender, RoutedEventArgs e)
         {
-            if (insidecheckbx.IsChecked == true) 
+            if (outsidecheckbx.IsChecked == true) 
             {
-                insidecheckbx.IsEnabled = false;
-                outsidecheckbx.IsEnabled = false;
-                FilledInfos.vitrageoutside = false;
+                outsidecheckbx.IsChecked = false;
             }
+            FilledInfos.vitrageoutside = false;
         }
 
         private void outisdecheckbx_Checked(object sender, RoutedEventArgs e)
         {
-            if(outsidecheckbx.IsChecked == true) 
+            if(insidecheckbx.IsChecked == true) 
             {
-                outsidecheckbx.IsEnabled = false;
-                insidecheckbx.IsEnabled = false; 
+                insidecheckbx.IsChecked = false;
             }
+            FilledInfos.vitrageoutside = true;
         }
 
+        //Cancel Functions
         private void CancelCheckingInsideOutside() 
         {
             outsidecheckbx.IsChecked = false;
@@ -107,40 +109,40 @@ namespace GlassMetalProj
             CancelCheckingInsideOutside();
             CancelcheckboxFranceOutreMer();
             CancelcbxFranceOutreMer();
+
+            //Cancel checkBox vertical / incliné 
+            Verticalcheckbx.IsEnabled = true;
+            Inclinedcheckbx.IsEnabled = true;
+            Verticalcheckbx.IsChecked=false;
+            Inclinedcheckbx.IsChecked=false;    
+
         }
+        // End Cancel Functions
 
         private void Francecheckbx_Checked(object sender, RoutedEventArgs e)
         {
-            if (!(bool)insidecheckbx.IsChecked && !(bool)outsidecheckbx.IsChecked) 
+            if (OutreMercheckbx.IsChecked == true) 
             {
-                MessageBox.Show("Cocher les cases dans le bon ordre (de haut en bas)");
-                Francecheckbx.IsChecked = false;
+                OutreMercheckbx.IsChecked = false;
+                RegionOutreMercbx.Visibility = Visibility.Hidden;
+                RegionOutreMercbx.SelectedIndex = -1;
             }
-            else 
-            {
-                Francecheckbx.IsEnabled = false;
-                OutreMercheckbx.IsEnabled = false;
-                Windlbl.Visibility = Visibility.Visible;
-                Regioncbx.Visibility = Visibility.Visible;
-                HelpButton.Visibility = Visibility.Visible;
-            }
+            Windlbl.Visibility = Visibility.Visible;
+            Regioncbx.Visibility = Visibility.Visible;
+            HelpButton.Visibility = Visibility.Visible;
         }
 
         private void OutreMercheckbx_Checked(object sender, RoutedEventArgs e)
         {
-            if (!(bool)insidecheckbx.IsChecked && !(bool)outsidecheckbx.IsChecked)
+            if (Francecheckbx.IsChecked == true)
             {
-                MessageBox.Show("Cocher les cases dans le bon ordre (de haut en bas)");
-                OutreMercheckbx.IsChecked = false;
+                Regioncbx.SelectedIndex = -1;
+                Francecheckbx.IsChecked = false;
+                Regioncbx.Visibility = Visibility.Hidden;
+                HelpButton.Visibility = Visibility.Hidden;
             }
-            else 
-            {
-                Francecheckbx.IsEnabled = false;
-                OutreMercheckbx.IsEnabled = false;
-                Windlbl.Visibility = Visibility.Visible;
-                RegionOutreMercbx.Visibility = Visibility.Visible;
-                FilledInfos.inFrance = false;
-            }
+            Windlbl.Visibility= Visibility.Visible;
+            RegionOutreMercbx.Visibility= Visibility.Visible;
         }
 
         private void Regioncbx_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -160,13 +162,38 @@ namespace GlassMetalProj
 
         private void Heightcbx_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            FilledInfos.IndexHeight = Heightcbx.SelectedIndex;
+            if (Heightcbx.SelectedIndex == 5) 
+            {
+                MessageBox.Show("Veuillez renseigner la pression à la main, lorsque nous sommes à plus de 100m, la pression doit être étudiée en soufflerie.");
+            }
+            else 
+            {
+                FilledInfos.IndexHeight = Heightcbx.SelectedIndex;
+            }
         }
 
         private void Calculatepressure_Click(object sender, RoutedEventArgs e)
         {
             FilledInfos.CalculatePressure();
-            MessageBox.Show("The Pressure is :" + FilledInfos.Pressure);
-        }        
+            MessageBox.Show("La pression de vent est :" + FilledInfos.Pressure);
+        }
+
+        private void Inclinedcheckbx_Checked(object sender, RoutedEventArgs e)
+        {
+            if(Verticalcheckbx.IsChecked == true) 
+            {
+                Verticalcheckbx.IsChecked = false;
+            }
+            FilledInfos.inclined = true;
+        }
+
+        private void Verticalcheckbx_Checked(object sender, RoutedEventArgs e)
+        {
+            if (Inclinedcheckbx.IsChecked == true) 
+            {
+                Inclinedcheckbx.IsChecked=false;
+            }
+            FilledInfos.inclined = false;
+        }
     }
 }

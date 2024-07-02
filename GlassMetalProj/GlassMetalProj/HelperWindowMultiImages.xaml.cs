@@ -26,14 +26,21 @@ namespace GlassMetalProj
 
         public void SetImages(string[] imagePaths)
         {
-            if (imagePaths.Length != 5)
-                throw new ArgumentException("There must be exactly 5 image paths.");
+            ImagesPanel.Children.Clear();
 
-            Image1.Source = new BitmapImage(new Uri(imagePaths[0], UriKind.RelativeOrAbsolute));
-            Image2.Source = new BitmapImage(new Uri(imagePaths[1], UriKind.RelativeOrAbsolute));
-            Image3.Source = new BitmapImage(new Uri(imagePaths[2], UriKind.RelativeOrAbsolute));
-            Image4.Source = new BitmapImage(new Uri(imagePaths[3], UriKind.RelativeOrAbsolute));
-            Image5.Source = new BitmapImage(new Uri(imagePaths[4], UriKind.RelativeOrAbsolute));
+            foreach (string imagePath in imagePaths)
+            {
+                Image image = new Image
+                {
+                    Source = new BitmapImage(new Uri(imagePath, UriKind.RelativeOrAbsolute)),
+                    Stretch = System.Windows.Media.Stretch.Uniform,
+                    Margin = new Thickness(10),
+                    Width = 200,  // Set a default width
+                    Height = 200  // Set a default height
+                };
+
+                ImagesPanel.Children.Add(image);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ControlzEx.Theming;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,13 @@ namespace GlassMetalProj
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            // Change the theme to Dark
+            ThemeManager.Current.ChangeTheme(Application.Current, "Dark.Blue");
+
+        }
     }
 }

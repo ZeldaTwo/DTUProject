@@ -6,13 +6,7 @@
         xmlns:local="clr-namespace:GlassMetalProj"
         mc:Ignorable="d"
         Title="HelperWindowMultiImages" Height="300" Width="1200">
-    <Grid>
-        <UniformGrid Rows="1" Columns="5">
-            <Image x:Name="Image1" Stretch="Uniform"/>
-            <Image x:Name="Image2" Stretch="Uniform"/>
-            <Image x:Name="Image3" Stretch="Uniform"/>
-            <Image x:Name="Image4" Stretch="Uniform"/>
-            <Image x:Name="Image5" Stretch="Uniform"/>
-        </UniformGrid>
-    </Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <WrapPanel x:Name="ImagesPanel" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    </ScrollViewer>
 </Window>

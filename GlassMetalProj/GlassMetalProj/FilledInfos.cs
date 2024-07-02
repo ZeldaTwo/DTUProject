@@ -19,14 +19,39 @@ namespace GlassMetalProj
 
         public bool vitrageoutside = true;
         public bool inFrance = true;
+        public bool inclined = false;
 
-        public FilledInfos(string path) 
+        public double[] pressureinclined = new double[7];
+
+        public double BetaAngle { get; set; }
+
+        public double Altitude { get; set; }
+
+        public int[] SnowChargeBelow200;
+        public int[] SnowChargeAD;
+
+        public double S1 {  get; set; }
+        public double S2 { get; set; }
+
+        public double L { get; set; }
+        public double l { get; set; }
+
+        public double[] epsilon1 { get; set; }
+        public double[] epsilon2 { get; set; }
+        public double[] epsilon3 { get; set; }
+
+        public double c;
+
+        public string thickness;
+
+        public FilledInfos(string pathPressure,string pathFactors) 
         {
             Pressure = 0;
             IndexHeight = -1; 
             IndexRegion = -1;
             IndexFieldType = -1;
-            InitalizePressures(path);
+            InitalizePressures(pathPressure);
+            InitializeEquivalenceFactors(pathFactors);
         }
 
         public void CalculatePressure() 
@@ -39,9 +64,78 @@ namespace GlassMetalProj
                 int i = IndexRegion * 5 + IndexFieldType;
                 int j = IndexHeight;
                 Pressure = windPressure[i, j];
+                if (inclined) 
+                {
+                    //Pvent 
+                    pressureinclined[0] = Pressure;
+
+                    //P2
+                }
             }
             else Pressure = 600;
         }
+
+        public void FindS1andS2(int indexS,double mu, double Ce, double Ct) 
+        {
+            if (Altitude <= 200) 
+            {
+                double Sk = SnowChargeBelow200[indexS];
+                S1 = Sk * mu + Ce * Ct;
+            }
+            else
+            {
+                double deltaS;
+                if (Altitude > 200 && Altitude <= 500)
+                    deltaS = Altitude - 200;
+                else if (Altitude > 500 && Altitude <= 1000) ;
+            }
+            double Sad = SnowChargeAD[indexS];
+            S2 = Sad * mu + Ce * Ct;
+        }
+
+        private void InitializeEquivalenceFactors(string path) 
+        {
+            if (path == string.Empty) 
+            {
+                //insulating glazing
+                epsilon1 = new double[2];
+                epsilon1[0] = 1.6;
+                epsilon1[1] = 2.0;
+
+                //Laminated glass
+                epsilon2 = new double[5];
+                epsilon2[0] = 1.3;
+                epsilon2[1] = 1.5;
+                epsilon2[2] = 1.6;
+                epsilon2[3] = 1.6;
+                epsilon2[4] = 2.0;
+
+                //Monolithic single glazing
+                epsilon3 = new double[20];
+                epsilon3[0] = 1.0;
+                epsilon3[1] = 1.2;
+                epsilon3[2] = 1.1;
+                epsilon3[3] = 1.1;
+                epsilon3[4] = 1.3;
+                epsilon3[5] = 0.61;
+                epsilon3[6] = 0.77;
+                epsilon3[7] = 0.71;
+                epsilon3[8] = 0.8;
+                epsilon3[9] = 1.0;
+                epsilon3[10] = 0.61;
+                epsilon3[11] = 1.0;
+                epsilon3[12] = 1.0;
+                epsilon3[13] = 0.6;
+                epsilon3[14] = 1.0;
+                epsilon3[15] = 0.55;
+                epsilon3[16] = 1.0;
+                epsilon3[17] = 1.1;
+                epsilon3[18] = 1.4;
+                epsilon3[19] = 1.2;
+
+            }
+        }
+
 
         private void InitalizePressures(string filepath)
         {
