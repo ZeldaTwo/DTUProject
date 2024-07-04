@@ -174,8 +174,14 @@ namespace GlassMetalProj
 
         private void Calculatepressure_Click(object sender, RoutedEventArgs e)
         {
-            FilledInfos.CalculatePressure();
-            MessageBox.Show("La pression de vent est :" + FilledInfos.Pressure);
+            if (!CheckEverythingIsChecked())
+                MessageBox.Show("Remplissez toutes les informations!");
+            else 
+            {
+                FilledInfos.CalculatePressure();
+                Pressuretxtbx.Text = FilledInfos.Pressure + "";
+            }
+            
         }
 
         private void Inclinedcheckbx_Checked(object sender, RoutedEventArgs e)
@@ -195,5 +201,58 @@ namespace GlassMetalProj
             }
             FilledInfos.inclined = false;
         }
+
+        private void Francecheckbx_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Windlbl.Visibility = Visibility.Hidden;
+            Regioncbx.Visibility = Visibility.Hidden;
+            HelpButton.Visibility = Visibility.Hidden;
+        }
+
+        private void OutreMercheckbx_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Windlbl.Visibility = Visibility.Hidden;
+            RegionOutreMercbx.Visibility = Visibility.Hidden;
+        }
+
+        private void Below9mcheckbx_Checked(object sender, RoutedEventArgs e)
+        {
+            FilledInfos.c = 0.9;
+        }
+
+        private void Below9mcheckbx_Unchecked(object sender, RoutedEventArgs e)
+        {
+            FilledInfos.c = 1.0;
+        }
+        private bool CheckEverythingIsChecked()
+        {
+            if (insidecheckbx.IsChecked == true || outsidecheckbx.IsChecked == true)
+            
+            {
+                if (Francecheckbx.IsChecked == true || OutreMercheckbx.IsChecked == true)
+                
+                {
+                    if (Heightcbx.SelectedIndex != -1) 
+                    {
+                        if (Regioncbx.SelectedIndex != -1 || RegionOutreMercbx.SelectedIndex != -1) 
+                        {
+                            if (Inclinedcheckbx.IsChecked == true || Verticalcheckbx.IsChecked == true)
+                            
+                            {
+                                if (FieldTypecbx.SelectedIndex != -1)
+                                    return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        private void Dimensioncbx_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+²
     }
 }

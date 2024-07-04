@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Animation;
-
-namespace GlassMetalProj
+﻿namespace GlassMetalProj
 {
     public class FilledInfos
     {
         public double Pressure {  get; set; }
+
+        //For finding the windpressure
         public int IndexHeight { get; set; }
         public int IndexRegion {  get; set; }
 
@@ -17,31 +12,42 @@ namespace GlassMetalProj
 
         private double[,] windPressure = new double[40, 5];
 
+        //The three first boxes 
         public bool vitrageoutside = true;
         public bool inFrance = true;
         public bool inclined = false;
 
         public double[] pressureinclined = new double[7];
 
+        //Angle for the inclined glazing
         public double BetaAngle { get; set; }
 
         public double Altitude { get; set; }
 
+
+        //Snow if inclined
         public int[] SnowChargeBelow200;
         public int[] SnowChargeAD;
 
         public double S1 {  get; set; }
         public double S2 { get; set; }
 
+        //Dimensions of the glazing 
         public double L { get; set; }
         public double l { get; set; }
 
-        public double[] epsilon1 { get; set; }
-        public double[] epsilon2 { get; set; }
-        public double[] epsilon3 { get; set; }
+        public double[] equivalencefactor1 { get; set; }
+        public double[] equivalencefactor2 { get; set; }
+        public double[] equivalencefactor3 { get; set; }
 
-        public double c;
+        public double epsilon1;
+        public double epsilon2;
+        public double epsilon3;
 
+        //equals to 1 every time expect one time
+        public double c = 1.0;
+
+        //e or ep.
         public string thickness;
 
         public FilledInfos(string pathPressure,string pathFactors) 
@@ -54,6 +60,67 @@ namespace GlassMetalProj
             InitializeEquivalenceFactors(pathFactors);
         }
 
+        public void CalculateDimensions(int i, double a, double b, double c, double d) 
+        {
+            // triangle isocèle
+            if (i == 1 || i == 2)
+            {
+                if (b > 2 / 3 * a) 
+                {
+                    L = b;
+                    l = 2/ 3 * a;  
+                }
+                else 
+                {
+                    L = 2/3 * a;
+                    l = b;
+                }
+            }
+            if (i == 3) 
+            {
+                if (b > c + 2 / 3 * (a - c)) 
+                {
+                    L = b;
+                    l = c + 2 / 3 * (a - c);
+                }
+                else 
+                {
+                    L = l = c + 2 / 3 * (a - c);
+                    l = b;
+                }
+            }
+            if (i == 4) 
+            {
+                if (b > (d + c + a) / 3) 
+                {
+                    L = b;
+                    l = (d + c + a) / 3;
+                }
+                else 
+                {
+                    L = (d + c + a) / 3;
+                    l = b;
+                }
+            }
+            if (i == 5) 
+            {
+                L = 0.85 * a;
+                l = 0.85 * a;
+            }
+            if (i == 6) 
+            {
+                if (b > 0.425 *b + c) 
+                {
+                    L = b;
+                    l = 0.425 * b + c;
+                }
+                else 
+                {
+                    L = 0.425 * b + c;
+                    l = b;
+                }
+            }
+        }
         public void CalculatePressure() 
         {
             if (vitrageoutside)
@@ -68,6 +135,9 @@ namespace GlassMetalProj
                 {
                     //Pvent 
                     pressureinclined[0] = Pressure;
+
+                    //Poids Propre
+
 
                     //P2
                 }
@@ -98,40 +168,40 @@ namespace GlassMetalProj
             if (path == string.Empty) 
             {
                 //insulating glazing
-                epsilon1 = new double[2];
-                epsilon1[0] = 1.6;
-                epsilon1[1] = 2.0;
+                equivalencefactor1 = new double[2];
+                equivalencefactor1[0] = 1.6;
+                equivalencefactor1[1] = 2.0;
 
                 //Laminated glass
-                epsilon2 = new double[5];
-                epsilon2[0] = 1.3;
-                epsilon2[1] = 1.5;
-                epsilon2[2] = 1.6;
-                epsilon2[3] = 1.6;
-                epsilon2[4] = 2.0;
+                equivalencefactor2 = new double[5];
+                equivalencefactor2[0] = 1.3;
+                equivalencefactor2[1] = 1.5;
+                equivalencefactor2[2] = 1.6;
+                equivalencefactor2[3] = 1.6;
+                equivalencefactor2[4] = 2.0;
 
                 //Monolithic single glazing
-                epsilon3 = new double[20];
-                epsilon3[0] = 1.0;
-                epsilon3[1] = 1.2;
-                epsilon3[2] = 1.1;
-                epsilon3[3] = 1.1;
-                epsilon3[4] = 1.3;
-                epsilon3[5] = 0.61;
-                epsilon3[6] = 0.77;
-                epsilon3[7] = 0.71;
-                epsilon3[8] = 0.8;
-                epsilon3[9] = 1.0;
-                epsilon3[10] = 0.61;
-                epsilon3[11] = 1.0;
-                epsilon3[12] = 1.0;
-                epsilon3[13] = 0.6;
-                epsilon3[14] = 1.0;
-                epsilon3[15] = 0.55;
-                epsilon3[16] = 1.0;
-                epsilon3[17] = 1.1;
-                epsilon3[18] = 1.4;
-                epsilon3[19] = 1.2;
+                equivalencefactor3 = new double[20];
+                equivalencefactor3[0] = 1.0;
+                equivalencefactor3[1] = 1.2;
+                equivalencefactor3[2] = 1.1;
+                equivalencefactor3[3] = 1.1;
+                equivalencefactor3[4] = 1.3;
+                equivalencefactor3[5] = 0.61;
+                equivalencefactor3[6] = 0.77;
+                equivalencefactor3[7] = 0.71;
+                equivalencefactor3[8] = 0.8;
+                equivalencefactor3[9] = 1.0;
+                equivalencefactor3[10] = 0.61;
+                equivalencefactor3[11] = 1.0;
+                equivalencefactor3[12] = 1.0;
+                equivalencefactor3[13] = 0.6;
+                equivalencefactor3[14] = 1.0;
+                equivalencefactor3[15] = 0.55;
+                equivalencefactor3[16] = 1.0;
+                equivalencefactor3[17] = 1.1;
+                equivalencefactor3[18] = 1.4;
+                equivalencefactor3[19] = 1.2;
 
             }
         }

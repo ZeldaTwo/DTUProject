@@ -19,7 +19,7 @@ namespace GlassMetalProj
             base.OnStartup(e);
 
             // Change the theme to Dark
-            ThemeManager.Current.ChangeTheme(Application.Current, "Dark.Blue");
+            ThemeManager.Current.ChangeTheme(Application.Current, "Light.Steel");
 
         }
     }
