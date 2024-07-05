@@ -1,4 +1,6 @@
-﻿namespace GlassMetalProj
+﻿using System.Windows;
+
+namespace GlassMetalProj
 {
     public class FilledInfos
     {
@@ -65,58 +67,58 @@
             // triangle isocèle
             if (i == 1 || i == 2)
             {
-                if (b > 2 / 3 * a) 
+                if (b >= (2.0 / 3.0) * a) 
                 {
                     L = b;
-                    l = 2/ 3 * a;  
+                    l = (2.0/3.0) * a;
                 }
                 else 
                 {
-                    L = 2/3 * a;
+                    L = (2.0/3.0) * a;
                     l = b;
                 }
             }
             if (i == 3) 
             {
-                if (b > c + 2 / 3 * (a - c)) 
+                if (b > c + (2.0 / 3.0) * (a - c)) 
                 {
                     L = b;
-                    l = c + 2 / 3 * (a - c);
+                    l = c + (2.0 / 3.0) * (a - c);
                 }
                 else 
                 {
-                    L = l = c + 2 / 3 * (a - c);
+                    L = l = c + (2.0 / 3.0) * (a - c);
                     l = b;
                 }
             }
             if (i == 4) 
             {
-                if (b > (d + c + a) / 3) 
+                if (b > (d + c + a) / 3.0) 
                 {
                     L = b;
-                    l = (d + c + a) / 3;
+                    l = (d + c + a) / 3.0;
                 }
                 else 
                 {
-                    L = (d + c + a) / 3;
+                    L = (d + c + a) / 3.0;
                     l = b;
                 }
             }
             if (i == 5) 
             {
-                L = 0.85 * a;
-                l = 0.85 * a;
+                L = (float)0.85 * a;
+                l = (float)0.85 * a;
             }
             if (i == 6) 
             {
                 if (b > 0.425 *b + c) 
                 {
                     L = b;
-                    l = 0.425 * b + c;
+                    l = (float)0.425 * b + c;
                 }
                 else 
                 {
-                    L = 0.425 * b + c;
+                    L = (float)0.425 * b + c;
                     l = b;
                 }
             }

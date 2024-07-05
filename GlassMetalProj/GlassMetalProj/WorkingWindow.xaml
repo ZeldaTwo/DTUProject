@@ -24,7 +24,7 @@
                       HorizontalAlignment="Left" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="547.5,0,0,0"/>
 
 
-        <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="92" Height="33" Content="Le vitrage est :" Margin="8,8,0,0"/>
+        <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="92" Height="33" Content="Le vitrage est :" Margin="8,9,0,0"/>
         <Label x:Name="Windlbl" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="127" Height="33" Content="La Région de vent :" Visibility="Hidden" Margin="8,121,0,0"/>
         <Label Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="126" Height="33" Content="Le chantier est :" Margin="8,68,0,0"/>
         <Label Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="255" Height="33" Content="La catégorie (dans le rayon R) du terrain est :" Margin="8,201,0,0"/>
@@ -71,7 +71,7 @@
             <ComboBoxItem Content="H > 100m"/>
         </ComboBox>
 
-        <ComboBox Name="Dimensioncbx" Grid.Column="0" Grid.Row="1" SelectionChanged="Dimensioncbx_SelectionChanged" Width="130"  Height="30" Margin="8,125,412,170">
+        <ComboBox Name="Dimensioncbx" Grid.Column="0" Grid.Row="1" SelectionChanged="Dimensioncbx_SelectionChanged" Margin="8,124,406,162">
             <ComboBoxItem Content= "Rectangle"/>
             <ComboBoxItem Content= "Triangle Isocèle"/>
             <ComboBoxItem Content= "Triangle rectangle"/>
@@ -87,7 +87,7 @@
 
 
         <!--Button Question Mark-->
-        <Button x:Name="HelpButton" Width="23" Height="20" Visibility="Hidden"
+        <Button x:Name="HelpButtonRegion" Width="23" Height="20" Visibility="Hidden"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
                 Background="LightYellow" BorderBrush="Black" BorderThickness="1"
                 ToolTip="Cliquez ici pour afficher les régions de vent de la France métropolitaine" Click="HelpButton_Click" Margin="121,121,0,0" >
@@ -116,14 +116,57 @@
             </Button.Template>
         </Button>
 
-        <Button x:Name="Calculatepressure" Content="Calculate Pressure" Grid.Column="0" Grid.Row="1" Margin="377,254,47,14" Visibility="Visible" Click="Calculatepressure_Click" />
+        <!--Button Question Mark-->
+        <Button x:Name="HelpButtonDimension" Width="23" Height="20" Visibility="Visible"
+         HorizontalAlignment="Left" VerticalAlignment="Top"
+         Background="LightYellow" BorderBrush="Black" BorderThickness="1"
+         ToolTip="Cliquez ici pour afficher les différents types de formes" Click="HelpButton_Click" Margin="110,96,0,0" Grid.Row="1" >
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <Ellipse Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding BorderThickness}"/>
+                        <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold"/>
+                    </Grid>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+
+        <Button x:Name="Calculatepressure" Content="Calculate Pressure" Grid.Column="0" Grid.Row="1" Margin="385,254,39,14" Visibility="Visible" Click="Calculatepressure_Click" />
 
         <Label Content="Pression (Pa) :" Grid.Row="1" Width="140" Height="50" FontSize="20" Margin="16,258,394,9" RenderTransformOrigin="0.754,0.425" />
-        <TextBox x:Name="Pressuretxtbx" HorizontalAlignment="Left" Height="37" Grid.Row="1" Foreground="Green" FontSize="20" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="70" TextAlignment="Right" Margin="154,259,0,0" />
+        <TextBox x:Name="Pressuretxtbx" HorizontalAlignment="Left" Height="49" Grid.Row="1" Foreground="Green" FontSize="20" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="72" TextAlignment="Right" Margin="158,262,0,0" />
 
         <CheckBox x:Name="Below9mcheckbx" Margin="313,83,127,189" Checked="Below9mcheckbx_Checked" Unchecked="Below9mcheckbx_Unchecked" />
 
         <TextBlock Background="#FF95A99D" TextWrapping="Wrap" Text="Vitrage en RDC, avec partie supérieure inférieur à 6 mètres " Height="40" Margin="334,87,47,190" LineHeight="16"/>
+
+        <Label Content="L calculé :" FontSize="16" HorizontalAlignment="Left" Margin="7,224,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
+        <TextBox x:Name="Lcalcultxtbx"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Right" Margin="85,224,0,0" />
+
+        <Label Content="l calculé :" FontSize="16" HorizontalAlignment="Left" Margin="148,224,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
+        <TextBox x:Name="lcalcultxtbx" HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Right" Margin="223,224,0,0" />
+
+        <Label Content="a :" x:Name="albl" FontSize="16" HorizontalAlignment="Left" Margin="148,123,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
+        <TextBox x:Name="atxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Right" Margin="177,123,0,0" />
+
+        <Label Content="b :" FontSize="16" x:Name="blbl" HorizontalAlignment="Left" Margin="246,123,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
+        <TextBox x:Name="btxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Right" Margin="279,123,0,0" />
+
+        <Label x:Name="clbl" Content="c :" FontSize="16" HorizontalAlignment="Left" Margin="349,123,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
+        <TextBox x:Name="ctxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Right" Margin="380,123,0,0" />
+
+        <Label x:Name="dlbl" Content="d :" FontSize="16" HorizontalAlignment="Left" Margin="448,124,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
+        <TextBox x:Name="dtxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Right" Margin="479,124,0,0" />
+        
+        <Button x:Name="CalculateDimensions" Content="Calcul des dimensions
+                " Grid.Column="0" Grid.Row="1" Margin="378,175,33,117" Visibility="Visible" Click="CalculateDimensions_Click" />
+        
+        <Label  x:Name="LLabel" Content="L :"  FontSize="16" HorizontalAlignment="Left" Margin="148,123,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
+        <TextBox x:Name="Ltxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Right" Margin="177,123,0,0" />
+        
+        <Label Content="l :" FontSize="16" x:Name="lLabel" HorizontalAlignment="Left" Margin="246,123,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
+        <TextBox x:Name="ltxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Right" Margin="279,123,0,0" />
+
 
     </Grid>
 </controls:MetroWindow>
