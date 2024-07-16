@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Runtime.InteropServices;
+using System.Windows;
 
 namespace GlassMetalProj
 {
@@ -30,6 +32,8 @@ namespace GlassMetalProj
         //Snow if inclined
         public int[] SnowChargeBelow200;
         public int[] SnowChargeAD;
+
+        public bool Avalanche;
 
         public double S1 {  get; set; }
         public double S2 { get; set; }
@@ -106,15 +110,15 @@ namespace GlassMetalProj
             }
             if (i == 5) 
             {
-                L = (float)0.85 * a;
-                l = (float)0.85 * a;
+                L = 0.85 * a;
+                l = 0.85 * a;
             }
             if (i == 6) 
             {
                 if (b > 0.425 *b + c) 
                 {
                     L = b;
-                    l = (float)0.425 * b + c;
+                    l = 0.425 * b + c;
                 }
                 else 
                 {
@@ -122,6 +126,8 @@ namespace GlassMetalProj
                     l = b;
                 }
             }
+            L = Math.Round(L, 2);
+            l = Math.Round(l, 2);
         }
         public void CalculatePressure() 
         {
@@ -464,5 +470,27 @@ namespace GlassMetalProj
             }
         }
 
+        private void FindEpsilon(int type, int index, int[] indexesforcase3) 
+        {
+            switch (type)
+            {
+                case 0:
+                    epsilon1 = equivalencefactor1[index];
+                    break;
+                case 1:
+                    epsilon2 = equivalencefactor2[index];
+                    break;
+                case 2:
+                    epsilon3 = equivalencefactor3[indexesforcase3[0]];
+                    for (int i = 1; i < indexesforcase3.Length; i++)
+                    {
+                        if (epsilon3 < equivalencefactor3[indexesforcase3[i]])
+                            epsilon3 = equivalencefactor3[indexesforcase3[i]];
+                    }
+                    break;
+                default:
+                    throw new Exception("Error in type value");
+            }
+        }
     }
 }

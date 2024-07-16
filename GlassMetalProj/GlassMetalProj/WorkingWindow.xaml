@@ -19,17 +19,28 @@
             <RowDefinition Height="50*"/>
         </Grid.RowDefinitions>
 
+
         <!-- GridSplitter -->
         <GridSplitter Width="5"  Background="Gray"
-                      HorizontalAlignment="Left" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="547.5,0,0,0"/>
+                      HorizontalAlignment="Left" IsEnabled="False" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="547.5,0,0,0"/>
 
+        <GridSplitter Background="Gray" IsEnabled="False" Grid.RowSpan="2" HorizontalAlignment="Left" Margin="275,180,0,-95" Width="5" Grid.Column="1" RenderTransformOrigin="0.5,0.5">
+            <GridSplitter.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="89.859"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </GridSplitter.RenderTransform>
+        </GridSplitter>
 
         <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="92" Height="33" Content="Le vitrage est :" Margin="8,9,0,0"/>
         <Label x:Name="Windlbl" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="127" Height="33" Content="La Région de vent :" Visibility="Hidden" Margin="8,121,0,0"/>
         <Label Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="126" Height="33" Content="Le chantier est :" Margin="8,68,0,0"/>
         <Label Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="255" Height="33" Content="La catégorie (dans le rayon R) du terrain est :" Margin="8,201,0,0"/>
         <Label Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="168" Height="33" Content="La hauteur du vitrage est :" Margin="308,10,0,0"/>
-        <Label Grid.Row="1" HorizontalAlignment="Left" Width="110" Height="33" Content="Forme du vitrage :" Margin="2,95,0,197"/>
+        <Label Grid.Row="1" HorizontalAlignment="Left" Width="110" Height="33" Content="Forme du vitrage :" Margin="4,194,0,98"/>
 
         <CheckBox x:Name="insidecheckbx"  Checked="insidecheckbx_Checked" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Content= "en intérieur"  Margin="130,33,0,0" />
         <CheckBox x:Name="outsidecheckbx" Checked="outisdecheckbx_Checked"  Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Content= "en extérieur"  Margin="15,33,0,0" />
@@ -71,7 +82,7 @@
             <ComboBoxItem Content="H > 100m"/>
         </ComboBox>
 
-        <ComboBox Name="Dimensioncbx" Grid.Column="0" Grid.Row="1" SelectionChanged="Dimensioncbx_SelectionChanged" Margin="8,124,406,162">
+        <ComboBox Name="Dimensioncbx" Grid.Column="0" Grid.Row="1" SelectionChanged="Dimensioncbx_SelectionChanged" Margin="4,219,410,67">
             <ComboBoxItem Content= "Rectangle"/>
             <ComboBoxItem Content= "Triangle Isocèle"/>
             <ComboBoxItem Content= "Triangle rectangle"/>
@@ -120,7 +131,7 @@
         <Button x:Name="HelpButtonDimension" Width="23" Height="20" Visibility="Visible"
          HorizontalAlignment="Left" VerticalAlignment="Top"
          Background="LightYellow" BorderBrush="Black" BorderThickness="1"
-         ToolTip="Cliquez ici pour afficher les différents types de formes" Click="HelpButton_Click" Margin="110,96,0,0" Grid.Row="1" >
+         ToolTip="Cliquez ici pour afficher les différents types de formes" Click="HelpButton_Click" Margin="109,193,0,0" Grid.Row="1" >
             <Button.Template>
                 <ControlTemplate TargetType="Button">
                     <Grid>
@@ -131,41 +142,264 @@
             </Button.Template>
         </Button>
 
-        <Button x:Name="Calculatepressure" Content="Calculate Pressure" Grid.Column="0" Grid.Row="1" Margin="385,254,39,14" Visibility="Visible" Click="Calculatepressure_Click" />
+        <Button x:Name="Calculatepressure" Content="Calculate Pressure" Grid.Column="0" Grid.Row="1" Margin="412,42,12,226" Visibility="Visible" Click="Calculatepressure_Click" />
 
-        <Label Content="Pression (Pa) :" Grid.Row="1" Width="140" Height="50" FontSize="20" Margin="16,258,394,9" RenderTransformOrigin="0.754,0.425" />
-        <TextBox x:Name="Pressuretxtbx" HorizontalAlignment="Left" Height="49" Grid.Row="1" Foreground="Green" FontSize="20" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="72" TextAlignment="Right" Margin="158,262,0,0" />
+        <Label Content="Pression (Pa) :" Grid.Row="1" Width="140" Height="50" FontSize="14
+               " Margin="5,283,405,-8" RenderTransformOrigin="0.754,0.425" Grid.Column="1" />
+        <TextBox x:Name="Pressuretxtbx" HorizontalAlignment="Left" Height="31" Grid.Row="1" Foreground="Green" FontSize="14" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="72" TextAlignment="Right" Margin="120,285,0,0" Grid.Column="1" />
 
         <CheckBox x:Name="Below9mcheckbx" Margin="313,83,127,189" Checked="Below9mcheckbx_Checked" Unchecked="Below9mcheckbx_Unchecked" />
 
         <TextBlock Background="#FF95A99D" TextWrapping="Wrap" Text="Vitrage en RDC, avec partie supérieure inférieur à 6 mètres " Height="40" Margin="334,87,47,190" LineHeight="16"/>
 
-        <Label Content="L calculé :" FontSize="16" HorizontalAlignment="Left" Margin="7,224,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
-        <TextBox x:Name="Lcalcultxtbx"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Right" Margin="85,224,0,0" />
+        <Label Content="L calculée (en m) :" FontSize="14
+               " HorizontalAlignment="Left" Margin="3,143,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084" Grid.Column="1"/>
+        <TextBox x:Name="Lcalcultxtbx"  HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="72" TextAlignment="Center" Margin="120,144,0,0" Grid.Column="1" />
 
-        <Label Content="l calculé :" FontSize="16" HorizontalAlignment="Left" Margin="148,224,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
-        <TextBox x:Name="lcalcultxtbx" HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Right" Margin="223,224,0,0" />
+        <Label Content="l calculée (en m) :" FontSize="14" HorizontalAlignment="Left" Margin="5,176,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084" Grid.Column="1"/>
+        <TextBox x:Name="lcalcultxtbx" HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="72" TextAlignment="Center" Margin="120,179,0,0" Grid.Column="1" />
 
-        <Label Content="a :" x:Name="albl" FontSize="16" HorizontalAlignment="Left" Margin="148,123,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
-        <TextBox x:Name="atxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Right" Margin="177,123,0,0" />
+        <Label Content="a :" x:Name="albl" FontSize="16" HorizontalAlignment="Left" Margin="151,223,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
+        <TextBox x:Name="atxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" PreviewTextInput="Preview_Text_Input" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Center" Margin="182,223,0,0" />
 
-        <Label Content="b :" FontSize="16" x:Name="blbl" HorizontalAlignment="Left" Margin="246,123,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
-        <TextBox x:Name="btxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Right" Margin="279,123,0,0" />
+        <Label Content="b :" FontSize="16" x:Name="blbl" HorizontalAlignment="Left" Margin="249,223,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
+        <TextBox x:Name="btxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" PreviewTextInput="Preview_Text_Input" VerticalAlignment="Top" Width="64" TextAlignment="Center" Margin="279,223,0,0" />
 
-        <Label x:Name="clbl" Content="c :" FontSize="16" HorizontalAlignment="Left" Margin="349,123,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
-        <TextBox x:Name="ctxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Right" Margin="380,123,0,0" />
+        <Label x:Name="clbl" Content="c :" FontSize="16" HorizontalAlignment="Left" Margin="350,223,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
+        <TextBox x:Name="ctxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" PreviewTextInput="Preview_Text_Input"  VerticalAlignment="Top" Width="64" TextAlignment="Center" Margin="380,223,0,0" />
 
-        <Label x:Name="dlbl" Content="d :" FontSize="16" HorizontalAlignment="Left" Margin="448,124,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
-        <TextBox x:Name="dtxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Right" Margin="479,124,0,0" />
-        
-        <Button x:Name="CalculateDimensions" Content="Calcul des dimensions
-                " Grid.Column="0" Grid.Row="1" Margin="378,175,33,117" Visibility="Visible" Click="CalculateDimensions_Click" />
-        
-        <Label  x:Name="LLabel" Content="L :"  FontSize="16" HorizontalAlignment="Left" Margin="148,123,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
-        <TextBox x:Name="Ltxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Right" Margin="177,123,0,0" />
-        
-        <Label Content="l :" FontSize="16" x:Name="lLabel" HorizontalAlignment="Left" Margin="246,123,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
-        <TextBox x:Name="ltxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Right" Margin="279,123,0,0" />
+        <Label x:Name="dlbl" Content="d :" FontSize="16" HorizontalAlignment="Left" Margin="449,223,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
+        <TextBox x:Name="dtxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16"  PreviewTextInput="Preview_Text_Input"  TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Center" Margin="479,223,0,0" />
+
+        <Button x:Name="CalculateDimensions" Content="Calcul des dimensions (en mm)" Grid.Column="0" Grid.Row="1" Margin="391,283,21,9" Visibility="Visible" Click="CalculateDimensions_Click" />
+
+        <Label  x:Name="LLabel" Content="L :"  FontSize="16" HorizontalAlignment="Left" Margin="152,223,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
+        <TextBox x:Name="Ltxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" PreviewTextInput="Preview_Text_Input"  FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Center" Margin="182,223,0,0" RenderTransformOrigin="0.416,-0.199" />
+
+        <Label Content="l :" FontSize="16" x:Name="lLabel" HorizontalAlignment="Left" Margin="255,223,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
+        <TextBox x:Name="ltxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" PreviewTextInput="Preview_Text_Input"  TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Center" Margin="279,223,0,0" />
+
+        <TextBlock Background="#FF95A99D" TextWrapping="Wrap" Text="Risque d'Avalanche" Margin="334,145,106,152" LineHeight="16"/>
+        <CheckBox x:Name="Avalanche_checkbx" Margin="313,133,127,139" Checked="Avalanche_checkbx_Checked" Unchecked="Avalanche_checkbx_Unchecked"  />
+        <Label Content="TRAVAIL A FAIRE POUR L'INCLINÉ !!!!!!!" HorizontalAlignment="Left" Margin="57,45,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+
+        <ComboBox x:Name="GlazingSupport" SelectionChanged="GlazingSupport_SelectionChanged" Grid.Column="1" FontSize="10" Margin="29,41,245,250">
+            <ComboBoxItem Content="En appui sur toute la périphérie" />
+            <ComboBoxItem Content="En appui sur 3 côtés"/>
+            <ComboBoxItem Content="En appui sur 2 côtés opposés"/>
+            <ComboBoxItem Content="En appui sur 2 côtés opposés avec maintien(s) ponctuel(s) sur les hauteurs"/>
+        </ComboBox>
+
+        <Label Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="198" Height="33" Content="Le vitrage est pris en feuillure sur :" Margin="15,13,0,0"/>
+
+        <Label x:Name="BordLibrelbl" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="72" Height="28" Content="Bord Libre :" Margin="314,18,0,0"/>
+        <CheckBox Grid.Column="1" x:Name="petitcotelcheckbx" Content="Le petit côté l" HorizontalAlignment="Left" Margin="322,50,0,0" VerticalAlignment="Top" Checked="CheckBox_Checked"/>
+
+        <CheckBox Grid.Column="1" x:Name="grandcotecheckbx" Content="Le grand côté L" HorizontalAlignment="Left" Margin="434,50,0,0" VerticalAlignment="Top" Checked="CheckBox_Checked"/>
+
+        <Button x:Name="HelpButtonGlazingSupport" Width="20" Height="20" Visibility="Visible"
+            HorizontalAlignment="Left" VerticalAlignment="Top"
+            Background="LightYellow" BorderBrush="Black" BorderThickness="1"
+            ToolTip="Si les dispositifs ponctuels sont distants de 300mm ou moins, veuillez sélectionner en appui sur 4 côtés" Margin="202,16,0,0" Grid.Column="1" >
+            <Button.Template>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Ellipse Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding BorderThickness}"/>
+                        <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold"/>
+                    </Grid>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+
+        <Label Content="e1 calculée (en mm) :" FontSize="14                " HorizontalAlignment="Left" Margin="335,143,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084" Grid.Column="1"/>
+
+        <TextBox x:Name="e1txtBox"  HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Right" Margin="480,144,0,0" Grid.Column="1" />
+
+        <Label x:Name="PositionDuMaitienlbl" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="128" Height="28" Content="Position du maintien :" Margin="314,75,0,0"/>
+        <CheckBox Grid.Column="1" x:Name="MaintienMiddlecheckbx" Content="Maitien au milieu du bord libre" HorizontalAlignment="Left" Margin="320,107,0,0" VerticalAlignment="Top" Checked="CheckBox_Checked"/>
+        <CheckBox Grid.Column="1" x:Name="DoubleMaintienscheckbx" Content="Deux maintiens ponctuels équidistants" HorizontalAlignment="Left" Margin="320,134,0,0" VerticalAlignment="Top" Checked="CheckBox_Checked"/>
+
+
+        <Label Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="198" Height="33" Content="Type de vitrage :" Margin="24,81,0,0"/>
+
+        <ComboBox Grid.Column="1" x:Name="GlazingTypecombobx" HorizontalAlignment="Left" SelectionChanged="GlazingTypecombobx_SelectionChanged" Margin="29,114,0,0" VerticalAlignment="Top" Width="143" Height="32">
+            <ComboBoxItem Content="Monolithiques" />
+            <ComboBoxItem Content="Feuilleté" />
+            <ComboBoxItem Content="Isolant 2 faces"/>
+            <ComboBoxItem Content="Isolant 3 faces"/>
+        </ComboBox>
+        <Label x:Name="Monolithiqueslbl" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="198" Height="33" Content="Type du composant monolithique :" Margin="29,163,0,0" RenderTransformOrigin="0.409,0.559"/>
+
+        <ComboBox Grid.Column="1" x:Name="GlazingTypemonolithiquescombobx" HorizontalAlignment="Left" SelectionChanged="GlazingTypemonolithiquescombobx_SelectionChanged"  Margin="29,195,0,0" VerticalAlignment="Top" Width="143" Height="32">
+            <ComboBoxItem Content="recuit NF EN 572-2 " />
+            <ComboBoxItem Content="recuit armé NF EN 572-3" />
+            <ComboBoxItem Content="étiré NF EN 572-4"/>
+            <ComboBoxItem Content="imprimé NF EN 572-5"/>
+            <ComboBoxItem Content="imprimé armé NF EN 572-6"/>
+            <ComboBoxItem Content="imprimé NF EN 572-5"/>
+            <ComboBoxItem Content="trempé NF EN 12150 ou NF EN 14179 "/>
+            <ComboBoxItem Content="émaillé trempé NF EN 12150"/>
+            <ComboBoxItem Content="imprimé trempé NF EN 12150"/>
+            <ComboBoxItem Content="durci NF EN 1863"/>
+            <ComboBoxItem Content="borosilicate NF EN 1748-1"/>
+            <ComboBoxItem Content="borosilicate trempé NF EN 13024"/>
+            <ComboBoxItem Content="émaillé durci NF EN 1863"/>
+            <ComboBoxItem Content="alcalino-terreux recuit NF EN 1748-1"/>
+            <ComboBoxItem Content="alcalino-terreux trempé NF EN 14321"/>
+            <ComboBoxItem Content="Vitrocéramique NF EN 1748-2"/>
+            <ComboBoxItem Content="trempé chimique NF EN 12337"/>
+            <ComboBoxItem Content="recuit dépoli acide industriellement"/>
+            <ComboBoxItem Content="recuit dépoli par sablage"/>
+            <ComboBoxItem Content="recuit dépoli par grenaillage"/>
+            <ComboBoxItem Content="gravé"/>
+        </ComboBox>
+        <TextBox x:Name="epaisseurmonolithiquetxtbx"  HorizontalAlignment="Left" Height="30" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Right" Margin="212,196,0,0" Grid.Column="1" />
+
+
+        <Label Content="Rapport L/l :" FontSize="14" HorizontalAlignment="Left" Margin="5,211,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084" Grid.Column="1"/>
+        <TextBox x:Name="RapportLsurltxtbx"  HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="72" TextAlignment="Center" Margin="120,214,0,0" Grid.Column="1" />
+
+        <Label Content="Surface (S) :" FontSize="14" HorizontalAlignment="Left" Margin="5,245,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084" Grid.Column="1"/>
+        <TextBox x:Name="Surfacetxtbx"  HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="72" TextAlignment="Center" Margin="120,249,0,0" Grid.Column="1" />
+
+        <ListBox x:Name="feuilletelbx" FontSize="9" Grid.Column="1" Margin="29,163,224,37" SelectionChanged="feuilletelbx_SelectionChanged" >
+            <ListBoxItem Content="feuilleté de sécurité NF en ISO 12543-2 à deux composants"/>
+            <ListBoxItem Content="feuilleté de sécurité NF en ISO 12543-2 à trois composants"/>
+            <ListBoxItem Content="feuilleté de sécurité NF en ISO 12543-2 à quatre composants ou plus"/>
+            <ListBoxItem Content="feuilleté NF en ISO 12543-3 à deux composants"/>
+            <ListBoxItem Content="feuilleté NF en ISO 12543-3 à trois composants ou plus"/>
+        </ListBox>
+
+        <ComboBox Grid.Column="1" x:Name="GlazingTypeFeuilleté1" FontSize="10" HorizontalAlignment="Left" SelectionChanged="GlazingTypemonolithiquescombobx_SelectionChanged"  Margin="29,289,0,0" VerticalAlignment="Top" Width="157" Height="34">
+            <ComboBoxItem Content="recuit NF EN 572-2 " />
+            <ComboBoxItem Content="recuit armé NF EN 572-3" />
+            <ComboBoxItem Content="étiré NF EN 572-4"/>
+            <ComboBoxItem Content="imprimé NF EN 572-5"/>
+            <ComboBoxItem Content="imprimé armé NF EN 572-6"/>
+            <ComboBoxItem Content="imprimé NF EN 572-5"/>
+            <ComboBoxItem Content="trempé NF EN 12150 ou NF EN 14179 "/>
+            <ComboBoxItem Content="émaillé trempé NF EN 12150"/>
+            <ComboBoxItem Content="imprimé trempé NF EN 12150"/>
+            <ComboBoxItem Content="durci NF EN 1863"/>
+            <ComboBoxItem Content="borosilicate NF EN 1748-1"/>
+            <ComboBoxItem Content="borosilicate trempé NF EN 13024"/>
+            <ComboBoxItem Content="émaillé durci NF EN 1863"/>
+            <ComboBoxItem Content="alcalino-terreux recuit NF EN 1748-1"/>
+            <ComboBoxItem Content="alcalino-terreux trempé NF EN 14321"/>
+            <ComboBoxItem Content="Vitrocéramique NF EN 1748-2"/>
+            <ComboBoxItem Content="trempé chimique NF EN 12337"/>
+            <ComboBoxItem Content="recuit dépoli acide industriellement"/>
+            <ComboBoxItem Content="recuit dépoli par sablage"/>
+            <ComboBoxItem Content="recuit dépoli par grenaillage"/>
+            <ComboBoxItem Content="gravé"/>
+        </ComboBox>
+        <TextBox x:Name="epaisseurfeuilleté1txtbx"  HorizontalAlignment="Left" Height="34" FontSize="13" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Center" Margin="212,289,0,0" Grid.Column="1" />
+
+
+        <ComboBox Grid.Column="1" x:Name="GlazingTypeFeuilleté2" FontSize="10" HorizontalAlignment="Left" SelectionChanged="GlazingTypemonolithiquescombobx_SelectionChanged"  Margin="29,6,0,0" VerticalAlignment="Top" Width="157" Height="16" Grid.Row="1">
+            <ComboBoxItem Content="recuit NF EN 572-2 " />
+            <ComboBoxItem Content="recuit armé NF EN 572-3" />
+            <ComboBoxItem Content="étiré NF EN 572-4"/>
+            <ComboBoxItem Content="imprimé NF EN 572-5"/>
+            <ComboBoxItem Content="imprimé armé NF EN 572-6"/>
+            <ComboBoxItem Content="imprimé NF EN 572-5"/>
+            <ComboBoxItem Content="trempé NF EN 12150 ou NF EN 14179 "/>
+            <ComboBoxItem Content="émaillé trempé NF EN 12150"/>
+            <ComboBoxItem Content="imprimé trempé NF EN 12150"/>
+            <ComboBoxItem Content="durci NF EN 1863"/>
+            <ComboBoxItem Content="borosilicate NF EN 1748-1"/>
+            <ComboBoxItem Content="borosilicate trempé NF EN 13024"/>
+            <ComboBoxItem Content="émaillé durci NF EN 1863"/>
+            <ComboBoxItem Content="alcalino-terreux recuit NF EN 1748-1"/>
+            <ComboBoxItem Content="alcalino-terreux trempé NF EN 14321"/>
+            <ComboBoxItem Content="Vitrocéramique NF EN 1748-2"/>
+            <ComboBoxItem Content="trempé chimique NF EN 12337"/>
+            <ComboBoxItem Content="recuit dépoli acide industriellement"/>
+            <ComboBoxItem Content="recuit dépoli par sablage"/>
+            <ComboBoxItem Content="recuit dépoli par grenaillage"/>
+            <ComboBoxItem Content="gravé"/>
+        </ComboBox>
+        <TextBox x:Name="epaisseurfeuilleté2txtbx"  HorizontalAlignment="Left" Height="26" FontSize="13" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Center" Margin="212,6,0,0" Grid.Column="1" Grid.Row="1" />
+
+
+        <ComboBox Grid.Column="1" x:Name="GlazingTypeFeuilleté3" FontSize="10" HorizontalAlignment="Left" SelectionChanged="GlazingTypemonolithiquescombobx_SelectionChanged"  Margin="29,38,0,0" VerticalAlignment="Top" Width="157" Height="16" Grid.Row="1">
+            <ComboBoxItem Content="recuit NF EN 572-2 " />
+            <ComboBoxItem Content="recuit armé NF EN 572-3" />
+            <ComboBoxItem Content="étiré NF EN 572-4"/>
+            <ComboBoxItem Content="imprimé NF EN 572-5"/>
+            <ComboBoxItem Content="imprimé armé NF EN 572-6"/>
+            <ComboBoxItem Content="imprimé NF EN 572-5"/>
+            <ComboBoxItem Content="trempé NF EN 12150 ou NF EN 14179 "/>
+            <ComboBoxItem Content="émaillé trempé NF EN 12150"/>
+            <ComboBoxItem Content="imprimé trempé NF EN 12150"/>
+            <ComboBoxItem Content="durci NF EN 1863"/>
+            <ComboBoxItem Content="borosilicate NF EN 1748-1"/>
+            <ComboBoxItem Content="borosilicate trempé NF EN 13024"/>
+            <ComboBoxItem Content="émaillé durci NF EN 1863"/>
+            <ComboBoxItem Content="alcalino-terreux recuit NF EN 1748-1"/>
+            <ComboBoxItem Content="alcalino-terreux trempé NF EN 14321"/>
+            <ComboBoxItem Content="Vitrocéramique NF EN 1748-2"/>
+            <ComboBoxItem Content="trempé chimique NF EN 12337"/>
+            <ComboBoxItem Content="recuit dépoli acide industriellement"/>
+            <ComboBoxItem Content="recuit dépoli par sablage"/>
+            <ComboBoxItem Content="recuit dépoli par grenaillage"/>
+            <ComboBoxItem Content="gravé"/>
+        </ComboBox>
+        <TextBox x:Name="epaisseurfeuilleté3txtbx"  HorizontalAlignment="Left" Height="26" FontSize="13" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Center" Margin="212,38,0,0" Grid.Column="1" Grid.Row="1" />
+
+
+        <ComboBox Grid.Column="1" x:Name="GlazingTypeFeuilleté4" FontSize="10" HorizontalAlignment="Left" SelectionChanged="GlazingTypemonolithiquescombobx_SelectionChanged"  Margin="29,70,0,0" VerticalAlignment="Top" Width="157" Height="16" Grid.Row="1">
+            <ComboBoxItem Content="recuit NF EN 572-2 " />
+            <ComboBoxItem Content="recuit armé NF EN 572-3" />
+            <ComboBoxItem Content="étiré NF EN 572-4"/>
+            <ComboBoxItem Content="imprimé NF EN 572-5"/>
+            <ComboBoxItem Content="imprimé armé NF EN 572-6"/>
+            <ComboBoxItem Content="imprimé NF EN 572-5"/>
+            <ComboBoxItem Content="trempé NF EN 12150 ou NF EN 14179 "/>
+            <ComboBoxItem Content="émaillé trempé NF EN 12150"/>
+            <ComboBoxItem Content="imprimé trempé NF EN 12150"/>
+            <ComboBoxItem Content="durci NF EN 1863"/>
+            <ComboBoxItem Content="borosilicate NF EN 1748-1"/>
+            <ComboBoxItem Content="borosilicate trempé NF EN 13024"/>
+            <ComboBoxItem Content="émaillé durci NF EN 1863"/>
+            <ComboBoxItem Content="alcalino-terreux recuit NF EN 1748-1"/>
+            <ComboBoxItem Content="alcalino-terreux trempé NF EN 14321"/>
+            <ComboBoxItem Content="Vitrocéramique NF EN 1748-2"/>
+            <ComboBoxItem Content="trempé chimique NF EN 12337"/>
+            <ComboBoxItem Content="recuit dépoli acide industriellement"/>
+            <ComboBoxItem Content="recuit dépoli par sablage"/>
+            <ComboBoxItem Content="recuit dépoli par grenaillage"/>
+            <ComboBoxItem Content="gravé"/>
+        </ComboBox>
+        <TextBox x:Name="epaisseurfeuilleté4txtbx"  HorizontalAlignment="Left" Height="26" FontSize="13" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Center" Margin="212,70,0,0" Grid.Column="1" Grid.Row="1" />
+
+        <ComboBox x:Name="isolant2facescombobx" SelectionChanged="isolant2facescombobx_SelectionChanged" Margin="29,163,0,0" VerticalAlignment="Top" Width="143" Height="32" HorizontalAlignment="Left" Grid.Column="1">
+            <ComboBoxItem Content="Double Monolithiques"/>
+            <ComboBoxItem Content="Monolithique + Feuilleté"/>
+            <ComboBoxItem Content="Double Feuilletés"/>
+        </ComboBox>
+
+        <Button x:Name="BackButton" Click="BackButton_Click" Grid.Column="1" Margin="231,101,286,190" Grid.Row="1">
+            <StackPanel Orientation="Horizontal">
+                <Path Data="M 10,20 L 30,10 L 30,30 Z"
+                          Fill="Black"
+                          Stretch="Uniform"
+                          Width="10"
+                          Height="10"/>
+            </StackPanel>
+        </Button>
+
+        <Button x:Name="NextButton" Click="NextButton_Click" Grid.Column="1" Margin="272,101,245,190" Grid.Row="1">
+            <StackPanel Orientation="Horizontal">
+                <Path Data="M 10,10 L 30,20 L 10,30 Z"
+                          Fill="Black"
+                          Stretch="Uniform"
+                          Width="10"
+                          Height="10"/>
+            </StackPanel>
+        </Button>
+
+        <Button Grid.Column="1" x:Name="thicknessCalculatebtn" Content="Calcul de eR et eF" HorizontalAlignment="Left" Margin="433,102,0,0" Grid.Row="1" VerticalAlignment="Top" Click="thicknessCalculatebtn_Click"/>
 
 
     </Grid>

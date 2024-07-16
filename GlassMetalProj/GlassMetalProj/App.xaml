@@ -11,6 +11,18 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <Style TargetType="ListBox">
+                <Setter Property="Background" Value="#FF95A99D"/>
+            </Style>
+            <!-- Style explicite pour ListBoxItem -->
+            <Style TargetType="ListBoxItem">
+                <Setter Property="Background" Value="#FF95A99D" />
+                <Setter Property="Margin" Value="2" />
+                <Setter Property="Padding" Value="2" />
+                <Setter Property="MinHeight" Value="11" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

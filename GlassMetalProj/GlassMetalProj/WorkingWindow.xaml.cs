@@ -25,16 +25,19 @@ namespace GlassMetalProj
     public partial class WorkingWindow : MetroWindow
     {
         private FilledInfos FilledInfos;
+        private MathsHelper mathsHelper;
 
         private double a = 0;
         private double b = 0;
         private double c = 0;
         private double d = 0;
 
+        int IndexInfeuilette = 0;
         public WorkingWindow()
         {
             InitializeComponent();
             FilledInfos = new FilledInfos("","");
+            mathsHelper = new MathsHelper(FilledInfos);
 
             //Disappearing textbox and Labels for dimensions.
             atxtbx.Visibility = Visibility.Hidden;
@@ -53,6 +56,48 @@ namespace GlassMetalProj
 
             lcalcultxtbx.IsEnabled = false;
             Lcalcultxtbx.IsEnabled = false;
+            e1txtBox.IsEnabled = false;
+            RapportLsurltxtbx.IsEnabled = false;
+            Surfacetxtbx.IsEnabled = false;
+
+            //Disappearing Label and CheckBox for "Grandcôté or petit côté"
+            BordLibrelbl.Visibility = Visibility.Hidden;
+            petitcotelcheckbx.Visibility = Visibility.Hidden;
+            grandcotecheckbx.Visibility = Visibility.Hidden;
+
+            //Disappearing Label and CheckBox for "Maitiens au milieu du grand côté or Doubles maintiens équidistants
+            PositionDuMaitienlbl.Visibility = Visibility.Hidden;
+            MaintienMiddlecheckbx.Visibility = Visibility.Hidden;
+            DoubleMaintienscheckbx.Visibility = Visibility.Hidden;
+
+            //Disappapearing Labels and CheckBox for glazingtype
+            Monolithiqueslbl.Visibility = Visibility.Hidden;
+            GlazingTypemonolithiquescombobx.Visibility = Visibility.Hidden;
+            epaisseurmonolithiquetxtbx.Visibility = Visibility.Hidden;
+
+            //Disappearing ListBox for feuilleté
+            feuilletelbx.Visibility = Visibility.Hidden;
+            GlazingTypeFeuilleté1.Visibility = Visibility.Hidden;
+            GlazingTypeFeuilleté2.Visibility = Visibility.Hidden;
+            GlazingTypeFeuilleté3.Visibility = Visibility.Hidden;
+            GlazingTypeFeuilleté4.Visibility = Visibility.Hidden;
+
+            //Disappearing textbox for feuilleté and thickness
+            epaisseurfeuilleté1txtbx.Visibility = Visibility.Hidden;
+            epaisseurfeuilleté2txtbx.Visibility = Visibility.Hidden;
+            epaisseurfeuilleté3txtbx.Visibility = Visibility.Hidden;
+            epaisseurfeuilleté4txtbx.Visibility = Visibility.Hidden;
+
+            //Disappearing combobox for isolant double faces
+            isolant2facescombobx.Visibility = Visibility.Hidden;
+
+            //Disappearing buttons for isolant double and triple faces. 
+            NextButton.Visibility = Visibility.Hidden;
+            BackButton.Visibility = Visibility.Hidden;
+
+            BackButton.IsEnabled = false;
+
+
         }
 
         private void HelpButton_Click(object sender, RoutedEventArgs e)
@@ -522,40 +567,68 @@ namespace GlassMetalProj
                             switch (textBox.Name)
                             {
                                 case "ltxtbx":
-                                    if (value > FilledInfos.L) 
+                                    if (value > FilledInfos.L && FilledInfos.L != 0)
                                     {
                                         MessageBox.Show("l ne peut pas être plus grand que L");
                                         ltxtbx.Text = string.Empty;
                                     }
-                                    else 
+                                    else
                                     {
                                         FilledInfos.l = value;
                                         textBox.IsEnabled = false;
                                     }
                                     break;
                                 case "Ltxtbx":
-                                    if (value < FilledInfos.l) 
+                                    if (value < FilledInfos.l && FilledInfos.l != 0)
                                     {
                                         MessageBox.Show("L ne peut pas être plus petit que l");
                                         Ltxtbx.Text = string.Empty;
                                     }
-                                    else 
+                                    else
                                     {
                                         textBox.IsEnabled = false;
                                         FilledInfos.L = value;
                                     }
                                     break;
                                 case "atxtbx":
-                                    a = value;
-                                    textBox.IsEnabled = false;
+                                    if (Dimensioncbx.SelectedIndex == 3)
+                                    {
+                                        if (c != 0 && value < c)
+                                            MessageBox.Show("a ne peut pas être inférieur à c");
+                                        else
+                                        {
+                                            a = value;
+                                            textBox.IsEnabled = false;
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        a = value;
+                                        textBox.IsEnabled = false;
+                                    }
                                     break;
                                 case "btxtbx":
                                     b = value;
                                     textBox.IsEnabled = false;
                                     break;
                                 case "ctxtbx":
-                                    c = value;
-                                    textBox.IsEnabled = false;
+                                    if (Dimensioncbx.SelectedIndex == 3)
+                                    {
+                                        if (a != 0 && value > a)
+                                            MessageBox.Show("c ne peut pas être supérieur à a");
+                                        else
+                                        {
+                                            c = value;
+                                            textBox.IsEnabled = false;
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        c = value;
+                                        textBox.IsEnabled = false;
+                                    }
                                     break;
                                 case "dtxtbx":
                                     d = value;
@@ -566,6 +639,8 @@ namespace GlassMetalProj
                             }
                         }
                     }
+                    else
+                        MessageBox.Show("Veuillez entrer une valeur valide (entre 0 exclu et plus)");
                 }
             }
             
@@ -583,6 +658,10 @@ namespace GlassMetalProj
                 {
                     Lcalcultxtbx.Text = FilledInfos.L.ToString();
                     lcalcultxtbx.Text = FilledInfos.l.ToString();
+
+                    RapportLsurltxtbx.Text = (FilledInfos.L / FilledInfos.l).ToString();
+                    Surfacetxtbx.Text = Math.Round((FilledInfos.L * FilledInfos.l), 3) + " m²";
+                    MessageBox.Show("La surface est :" + Surfacetxtbx.Text);
                 }
             }
                 
@@ -595,8 +674,11 @@ namespace GlassMetalProj
                     FilledInfos.CalculateDimensions(Dimensioncbx.SelectedIndex, a, b, c, d);
                     Lcalcultxtbx.Text = FilledInfos.L.ToString();
                     lcalcultxtbx.Text = FilledInfos.l.ToString();
+                    RapportLsurltxtbx.Text = (FilledInfos.L / FilledInfos.l).ToString();
+                    Surfacetxtbx.Text = Math.Round((FilledInfos.L * FilledInfos.l), 3) + " m²";
+
                 }
-                
+
             }
             if (Dimensioncbx.SelectedIndex == 3) 
             {
@@ -605,10 +687,13 @@ namespace GlassMetalProj
                 else 
                 {
                     FilledInfos.CalculateDimensions(3, a, b, c, d);
-                    Ltxtbx.Text = FilledInfos.L.ToString();
-                    ltxtbx.Text = FilledInfos.l.ToString();
+                    Lcalcultxtbx.Text = FilledInfos.L.ToString();
+                    lcalcultxtbx.Text = FilledInfos.l.ToString();
+                    RapportLsurltxtbx.Text = (FilledInfos.L / FilledInfos.l).ToString();
+                    Surfacetxtbx.Text = Math.Round((FilledInfos.L * FilledInfos.l), 3) + " m²";
+
                 }
-                
+
             }
             if (Dimensioncbx.SelectedIndex == 4) 
             {
@@ -617,8 +702,10 @@ namespace GlassMetalProj
                 else 
                 {
                     FilledInfos.CalculateDimensions(4, a, b, c, d);
-                    Ltxtbx.Text = FilledInfos.L.ToString();
-                    ltxtbx.Text = FilledInfos.l.ToString();
+                    Lcalcultxtbx.Text = FilledInfos.L.ToString();
+                    lcalcultxtbx.Text = FilledInfos.l.ToString();
+                    RapportLsurltxtbx.Text = (FilledInfos.L / FilledInfos.l).ToString();
+                    Surfacetxtbx.Text = Math.Round((FilledInfos.L * FilledInfos.l), 3) + " m²";
                 }
             }
             if (Dimensioncbx.SelectedIndex == 5) 
@@ -628,10 +715,12 @@ namespace GlassMetalProj
                 else 
                 {
                     FilledInfos.CalculateDimensions(5, a, b, c, d);
-                    Ltxtbx.Text = FilledInfos.L.ToString();
-                    ltxtbx.Text = FilledInfos.l.ToString();
+                    Lcalcultxtbx.Text = FilledInfos.L.ToString();
+                    lcalcultxtbx.Text = FilledInfos.l.ToString();
+                    RapportLsurltxtbx.Text = (FilledInfos.L / FilledInfos.l).ToString();
+                    Surfacetxtbx.Text = Math.Round((FilledInfos.L * FilledInfos.l), 3) + " m²";
                 }
-                
+
             }
             if (Dimensioncbx.SelectedIndex == 6)
             {
@@ -640,12 +729,288 @@ namespace GlassMetalProj
                 else 
                 {
                     FilledInfos.CalculateDimensions(6, a, b, c, d);
-                    Ltxtbx.Text = FilledInfos.L.ToString();
-                    ltxtbx.Text = FilledInfos.l.ToString();
+                    Lcalcultxtbx.Text = FilledInfos.L.ToString();
+                    lcalcultxtbx.Text = FilledInfos.l.ToString();
+                    RapportLsurltxtbx.Text = (FilledInfos.L / FilledInfos.l).ToString();
+                    Surfacetxtbx.Text = Math.Round((FilledInfos.L * FilledInfos.l), 3) + " m²";
                 }
-                
+
             }
 
+        }
+
+        private void Avalanche_checkbx_Checked(object sender, RoutedEventArgs e)
+        {
+            FilledInfos.Avalanche = true;
+        }
+
+        private void Avalanche_checkbx_Unchecked(object sender, RoutedEventArgs e)
+        {
+            FilledInfos.Avalanche = false;
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            ComboBoxItem selected = GlazingSupport.SelectedItem as ComboBoxItem;
+            CheckBox checkBox = sender as CheckBox;
+            if (checkBox.Name == "petitcotelcheckbx") 
+            {
+                if (grandcotecheckbx.IsChecked == true)
+                    grandcotecheckbx.IsChecked = false;
+
+                mathsHelper.e1Calculatation(selected.Content.ToString(), -1, -1);
+
+                if (GlazingSupport.SelectedIndex != 3)
+                    e1txtBox.Text = mathsHelper.e1.ToString();
+
+                //Update if changing the grand cote or petit cote CheckBox
+                else if (GlazingSupport.SelectedIndex == 3 && (MaintienMiddlecheckbx.IsChecked == true)) 
+                {
+                    mathsHelper.e1Calculatation(selected.Content.ToString(), 0, -1);
+                    e1txtBox.Text = mathsHelper.e1.ToString();
+                }
+                else if (GlazingSupport.SelectedIndex == 3 && DoubleMaintienscheckbx.IsChecked == true) 
+                {
+                    mathsHelper.e1Calculatation(selected.Content.ToString(), -1, -1);
+                    e1txtBox.Text = mathsHelper.e1.ToString();
+                }
+            }
+            if (checkBox.Name == "grandcotecheckbx") 
+            {
+                if (petitcotelcheckbx.IsChecked== true)
+                    petitcotelcheckbx.IsChecked= false;
+
+                mathsHelper.e1Calculatation(selected.Content.ToString(), 0, -1);
+
+                if (GlazingSupport.SelectedIndex != 3)
+                    e1txtBox.Text = mathsHelper.e1.ToString();
+
+                //Update if changing the grand cote or petit cote checkbox
+                else if (GlazingSupport.SelectedIndex == 3 && (MaintienMiddlecheckbx.IsChecked == true))
+                {
+                    mathsHelper.e1Calculatation(selected.Content.ToString(), 0, 0);
+                    e1txtBox.Text = mathsHelper.e1.ToString();
+                }
+                else if (GlazingSupport.SelectedIndex == 3 && DoubleMaintienscheckbx.IsChecked == true)
+                {
+                    mathsHelper.e1Calculatation(selected.Content.ToString(), -1, 0);
+                    e1txtBox.Text = mathsHelper.e1.ToString();
+                }
+            }
+            if (checkBox.Name == "MaintienMiddlecheckbx") 
+            {
+                //Visual and Not doable issues
+                if (DoubleMaintienscheckbx.IsChecked == true)
+                    DoubleMaintienscheckbx.IsChecked = false;
+                if (petitcotelcheckbx.IsChecked == false && grandcotecheckbx.IsChecked == false)
+                {
+                    MessageBox.Show("Veuillez d'abord cocher une des cases ci-dessus");
+                    checkBox.IsChecked = false;
+                }
+                else 
+                {
+                    if (petitcotelcheckbx.IsChecked == true)
+                        mathsHelper.e1Calculatation(selected.Content.ToString(), 0, -1);
+                    else if (grandcotecheckbx.IsChecked == true)
+                        mathsHelper.e1Calculatation(selected.Content.ToString(), 0, 0);
+                    e1txtBox.Text = mathsHelper.e1.ToString();
+                }
+            }
+            if (checkBox.Name == "DoubleMaintienscheckbx") 
+            {
+                //Visual and Not doable issues
+                if (MaintienMiddlecheckbx.IsChecked == true)
+                    MaintienMiddlecheckbx.IsChecked = false;
+                if (petitcotelcheckbx.IsChecked == false && grandcotecheckbx.IsChecked == false)
+                {
+                    MessageBox.Show("Veuillez d'abord cocher une des cases ci-dessus");
+                    checkBox.IsChecked = false;
+                }
+                else 
+                {
+                    if (petitcotelcheckbx.IsChecked == true)
+                        mathsHelper.e1Calculatation(selected.Content.ToString(), -1, -1);
+                    else if (grandcotecheckbx.IsChecked == true)
+                        mathsHelper.e1Calculatation(selected.Content.ToString(), -1, 0);
+                    e1txtBox.Text = mathsHelper.e1.ToString();
+                }
+
+
+            }
+        }
+
+        private void GlazingSupport_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBoxItem selectedstring = GlazingSupport.SelectedItem as ComboBoxItem;
+
+            if (GlazingSupport.SelectedIndex != 0) 
+            {
+                //Visual things
+                BordLibrelbl.Visibility = Visibility.Visible;
+                petitcotelcheckbx.Visibility = Visibility.Visible;
+                grandcotecheckbx.Visibility= Visibility.Visible;
+                petitcotelcheckbx.IsChecked = false;
+                grandcotecheckbx.IsChecked = false ;
+                e1txtBox.Text = string.Empty;
+
+                MaintienMiddlecheckbx.Visibility = Visibility.Hidden;
+                DoubleMaintienscheckbx.Visibility = Visibility.Hidden;
+                PositionDuMaitienlbl.Visibility = Visibility.Hidden;
+                DoubleMaintienscheckbx.IsChecked = false;
+                MaintienMiddlecheckbx.IsChecked = false;
+
+                if (GlazingSupport.SelectedIndex == 3) 
+                {
+                    MaintienMiddlecheckbx.Visibility = Visibility.Visible;
+                    DoubleMaintienscheckbx.Visibility = Visibility.Visible;
+                    PositionDuMaitienlbl.Visibility = Visibility.Visible;
+                }
+            }
+            else 
+            {
+                //Visual things
+                BordLibrelbl.Visibility = Visibility.Hidden;
+                petitcotelcheckbx.Visibility = Visibility.Hidden;
+                grandcotecheckbx.Visibility = Visibility.Hidden;
+                petitcotelcheckbx.IsChecked = false;
+                grandcotecheckbx.IsChecked = false;
+
+                MaintienMiddlecheckbx.Visibility = Visibility.Hidden;
+                DoubleMaintienscheckbx.Visibility = Visibility.Hidden;
+                PositionDuMaitienlbl.Visibility = Visibility.Hidden;
+                DoubleMaintienscheckbx.IsChecked = false;
+                MaintienMiddlecheckbx.IsChecked = false;
+
+                mathsHelper.e1Calculatation(selectedstring.Content.ToString(), -1, -1);
+                e1txtBox.Text = mathsHelper.e1.ToString();
+            }
+        }
+
+        private void Preview_Text_Input(object sender, TextCompositionEventArgs e)
+        {
+            if (e.Text == ".")
+            {
+                // Annule l'entrée de texte par défaut
+                e.Handled = true;
+
+                // Insère une virgule à la position du curseur
+                TextBox textBox = sender as TextBox;
+                int caretIndex = textBox.CaretIndex;
+                textBox.Text = textBox.Text.Insert(caretIndex, ",");
+                textBox.CaretIndex = caretIndex + 1; // Déplace le curseur après la virgule
+            }
+        }
+
+        private void GlazingTypecombobx_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //Hide everyting at the beginning
+            Monolithiqueslbl.Visibility = Visibility.Hidden;
+            GlazingTypemonolithiquescombobx.Visibility = Visibility.Hidden;
+            epaisseurmonolithiquetxtbx.Visibility = Visibility.Hidden;
+
+            feuilletelbx.Visibility = Visibility.Hidden;
+            GlazingTypeFeuilleté1.Visibility = Visibility.Hidden;
+            GlazingTypeFeuilleté2.Visibility = Visibility.Hidden;
+            GlazingTypeFeuilleté3.Visibility = Visibility.Hidden;
+            GlazingTypeFeuilleté4.Visibility = Visibility.Hidden;
+
+            epaisseurfeuilleté1txtbx.Visibility = Visibility.Hidden;
+            epaisseurfeuilleté2txtbx.Visibility = Visibility.Hidden;
+            epaisseurfeuilleté3txtbx.Visibility = Visibility.Hidden;
+            epaisseurfeuilleté4txtbx.Visibility = Visibility.Hidden;
+
+            isolant2facescombobx.Visibility = Visibility.Hidden;
+
+            NextButton.Visibility = Visibility.Hidden;
+            BackButton.Visibility = Visibility.Hidden;
+
+            if (GlazingTypecombobx.SelectedIndex == 0) 
+            {
+                Monolithiqueslbl.Visibility = Visibility.Visible;
+                GlazingTypemonolithiquescombobx.Visibility = Visibility.Visible;
+                epaisseurmonolithiquetxtbx.Visibility = Visibility.Visible;
+                
+            }
+            if (GlazingTypecombobx.SelectedIndex == 1) 
+            {
+                feuilletelbx.Visibility = Visibility.Visible;
+            }
+            if (GlazingTypecombobx.SelectedIndex == 2) 
+            {
+                isolant2facescombobx.Visibility = Visibility.Visible;
+            }
+            
+        }
+
+        private void GlazingTypemonolithiquescombobx_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int i = GlazingTypemonolithiquescombobx.SelectedIndex;
+
+        }
+
+        private void feuilletelbx_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            GlazingTypeFeuilleté1.SelectedIndex = -1;
+            GlazingTypeFeuilleté2.SelectedIndex = -1;
+            GlazingTypeFeuilleté3.SelectedIndex = -1;
+            GlazingTypeFeuilleté4.SelectedIndex = -1;
+            epaisseurfeuilleté1txtbx.Text = string.Empty;
+            epaisseurfeuilleté2txtbx.Text = string.Empty;
+            epaisseurfeuilleté3txtbx.Text = string.Empty;
+            epaisseurfeuilleté4txtbx.Text = string.Empty;
+            epaisseurfeuilleté1txtbx.Visibility = Visibility.Visible;
+            epaisseurfeuilleté2txtbx.Visibility = Visibility.Visible;
+            epaisseurfeuilleté3txtbx.Visibility = Visibility.Hidden;
+            epaisseurfeuilleté4txtbx.Visibility = Visibility.Hidden;
+            GlazingTypeFeuilleté1.Visibility = Visibility.Visible;
+            GlazingTypeFeuilleté2.Visibility = Visibility.Visible;
+            GlazingTypeFeuilleté3.Visibility = Visibility.Hidden;
+            GlazingTypeFeuilleté4.Visibility = Visibility.Hidden;
+            int i = feuilletelbx.SelectedIndex;
+            switch (i) 
+            {
+                case 1: case 4:
+                    GlazingTypeFeuilleté3.Visibility = Visibility.Visible;
+
+                    epaisseurfeuilleté3txtbx.Visibility = Visibility.Visible;
+                    break;
+                case 2:
+                    GlazingTypeFeuilleté3.Visibility = Visibility.Visible;
+                    GlazingTypeFeuilleté4.Visibility = Visibility.Visible;
+
+                    epaisseurfeuilleté3txtbx.Visibility = Visibility.Visible;
+                    epaisseurfeuilleté4txtbx.Visibility = Visibility.Visible;
+                    break;
+            }
+        }
+
+        private void isolant2facescombobx_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (BackButton.Visibility != Visibility.Visible && NextButton.Visibility != Visibility.Visible) 
+            {
+                BackButton.Visibility = Visibility.Visible;
+                NextButton.Visibility = Visibility.Visible;
+            }
+           
+        }
+
+        private void thicknessCalculatebtn_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void NextButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (IndexInfeuilette == 0)
+                BackButton.IsEnabled = true;
+            IndexInfeuilette++;
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (IndexInfeuilette == 1)
+                BackButton.IsEnabled = false;
+            IndexInfeuilette--;
         }
     }
 }

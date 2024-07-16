@@ -21,6 +21,23 @@ namespace TestingCode
             {
                 Console.WriteLine($"Token: {token} - Valid: {MathsHelper.IsTokenValid(token)}");
             }
+
+            fi.L = 3.05;
+            fi.l = 0.6;
+            string str = "En appui sur toute la périphérie";
+            fi.Pressure = 2000;
+
+            Console.WriteLine("L / l is : " + fi.L / fi.l);
+            mathsHelper.e1Calculatation(str, -1, -1);
+            Console.WriteLine("e1 is : " + mathsHelper.e1);
+
+            fi.L = 2.05;
+            fi.l = 1.12;
+            fi.Pressure = 1500;
+            Console.WriteLine("L / l is : " + fi.L / fi.l);
+
+            mathsHelper.e1Calculatation("En appui sur 2 côtés opposés", 1, -1);
+            Console.WriteLine("e1 is : " + mathsHelper.e1);
             Console.ReadKey();
         }
     }
