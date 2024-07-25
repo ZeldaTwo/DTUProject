@@ -2,6 +2,7 @@
 using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
@@ -32,7 +34,7 @@ namespace GlassMetalProj
         private double c = 0;
         private double d = 0;
 
-        int IndexInfeuilette = 0;
+        int IndexInfeuilette = 1;
         public WorkingWindow()
         {
             InitializeComponent();
@@ -57,8 +59,10 @@ namespace GlassMetalProj
             lcalcultxtbx.IsEnabled = false;
             Lcalcultxtbx.IsEnabled = false;
             e1txtBox.IsEnabled = false;
-            RapportLsurltxtbx.IsEnabled = false;
+            RapportlsurLtxtbx.IsEnabled = false;
             Surfacetxtbx.IsEnabled = false;
+            eRtxtbox.IsEnabled = false;
+            eFtxtbox.IsEnabled = false;
 
             //Disappearing Label and CheckBox for "Grandcôté or petit côté"
             BordLibrelbl.Visibility = Visibility.Hidden;
@@ -88,14 +92,16 @@ namespace GlassMetalProj
             epaisseurfeuilleté3txtbx.Visibility = Visibility.Hidden;
             epaisseurfeuilleté4txtbx.Visibility = Visibility.Hidden;
 
-            //Disappearing combobox for isolant double faces
+            //Disappearing combobox for isolant double faces and triple faces
             isolant2facescombobx.Visibility = Visibility.Hidden;
+            isolant3facescombobx.Visibility = Visibility.Hidden;
+
+            //Disabling the button to calculate ER AND EF
+            thicknessCalculatebtn.IsEnabled = false; 
 
             //Disappearing buttons for isolant double and triple faces. 
             NextButton.Visibility = Visibility.Hidden;
             BackButton.Visibility = Visibility.Hidden;
-
-            BackButton.IsEnabled = false;
 
 
         }
@@ -155,51 +161,6 @@ namespace GlassMetalProj
             FilledInfos.vitrageoutside = true;
         }
 
-        //Cancel Functions
-        private void CancelCheckingInsideOutside() 
-        {
-            outsidecheckbx.IsChecked = false;
-            insidecheckbx.IsChecked= false;
-            outsidecheckbx.IsEnabled = true;
-            insidecheckbx.IsEnabled = true;
-            FilledInfos.vitrageoutside = true;
-        }
-
-        private void CancelcheckboxFranceOutreMer() 
-        {
-            Francecheckbx.IsChecked = false;
-            OutreMercheckbx.IsChecked = false;
-            Francecheckbx.IsEnabled = true;
-            OutreMercheckbx.IsEnabled= true;
-            FilledInfos.inFrance = true; 
-        }
-
-        private void CancelcbxFranceOutreMer() 
-        {
-            Windlbl.Visibility = Visibility.Hidden;
-            HelpButtonRegion.Visibility = Visibility.Hidden;
-            Regioncbx.Text = null;
-            RegionOutreMercbx.Text = null;
-            Regioncbx.Visibility = Visibility.Hidden;
-            RegionOutreMercbx.Visibility = Visibility.Hidden;
-            FilledInfos.IndexRegion = -1;
-        }
-
-        private void Cancel_Button_Click(object sender, RoutedEventArgs e)
-        {
-            CancelCheckingInsideOutside();
-            CancelcheckboxFranceOutreMer();
-            CancelcbxFranceOutreMer();
-
-            //Cancel checkBox vertical / incliné 
-            Verticalcheckbx.IsEnabled = true;
-            Inclinedcheckbx.IsEnabled = true;
-            Verticalcheckbx.IsChecked=false;
-            Inclinedcheckbx.IsChecked=false;    
-
-        }
-        // End Cancel Functions
-
         private void Francecheckbx_Checked(object sender, RoutedEventArgs e)
         {
             if (OutreMercheckbx.IsChecked == true) 
@@ -246,6 +207,7 @@ namespace GlassMetalProj
             if (Heightcbx.SelectedIndex == 5) 
             {
                 MessageBox.Show("Veuillez renseigner la pression à la main, lorsque nous sommes à plus de 100m, la pression doit être étudiée en soufflerie.");
+                Heightcbx.SelectedIndex = -1;
             }
             else 
             {
@@ -659,9 +621,8 @@ namespace GlassMetalProj
                     Lcalcultxtbx.Text = FilledInfos.L.ToString();
                     lcalcultxtbx.Text = FilledInfos.l.ToString();
 
-                    RapportLsurltxtbx.Text = (FilledInfos.L / FilledInfos.l).ToString();
+                    RapportlsurLtxtbx.Text = Math.Round(FilledInfos.l / FilledInfos.L, 2).ToString();
                     Surfacetxtbx.Text = Math.Round((FilledInfos.L * FilledInfos.l), 3) + " m²";
-                    MessageBox.Show("La surface est :" + Surfacetxtbx.Text);
                 }
             }
                 
@@ -674,7 +635,7 @@ namespace GlassMetalProj
                     FilledInfos.CalculateDimensions(Dimensioncbx.SelectedIndex, a, b, c, d);
                     Lcalcultxtbx.Text = FilledInfos.L.ToString();
                     lcalcultxtbx.Text = FilledInfos.l.ToString();
-                    RapportLsurltxtbx.Text = (FilledInfos.L / FilledInfos.l).ToString();
+                    RapportlsurLtxtbx.Text = Math.Round(FilledInfos.l / FilledInfos.L, 2).ToString();
                     Surfacetxtbx.Text = Math.Round((FilledInfos.L * FilledInfos.l), 3) + " m²";
 
                 }
@@ -689,7 +650,7 @@ namespace GlassMetalProj
                     FilledInfos.CalculateDimensions(3, a, b, c, d);
                     Lcalcultxtbx.Text = FilledInfos.L.ToString();
                     lcalcultxtbx.Text = FilledInfos.l.ToString();
-                    RapportLsurltxtbx.Text = (FilledInfos.L / FilledInfos.l).ToString();
+                    RapportlsurLtxtbx.Text = Math.Round(FilledInfos.l / FilledInfos.L, 2).ToString();
                     Surfacetxtbx.Text = Math.Round((FilledInfos.L * FilledInfos.l), 3) + " m²";
 
                 }
@@ -704,7 +665,7 @@ namespace GlassMetalProj
                     FilledInfos.CalculateDimensions(4, a, b, c, d);
                     Lcalcultxtbx.Text = FilledInfos.L.ToString();
                     lcalcultxtbx.Text = FilledInfos.l.ToString();
-                    RapportLsurltxtbx.Text = (FilledInfos.L / FilledInfos.l).ToString();
+                    RapportlsurLtxtbx.Text = Math.Round(FilledInfos.l / FilledInfos.L, 2).ToString();
                     Surfacetxtbx.Text = Math.Round((FilledInfos.L * FilledInfos.l), 3) + " m²";
                 }
             }
@@ -717,7 +678,7 @@ namespace GlassMetalProj
                     FilledInfos.CalculateDimensions(5, a, b, c, d);
                     Lcalcultxtbx.Text = FilledInfos.L.ToString();
                     lcalcultxtbx.Text = FilledInfos.l.ToString();
-                    RapportLsurltxtbx.Text = (FilledInfos.L / FilledInfos.l).ToString();
+                    RapportlsurLtxtbx.Text = Math.Round(FilledInfos.l / FilledInfos.L, 2).ToString();
                     Surfacetxtbx.Text = Math.Round((FilledInfos.L * FilledInfos.l), 3) + " m²";
                 }
 
@@ -731,7 +692,8 @@ namespace GlassMetalProj
                     FilledInfos.CalculateDimensions(6, a, b, c, d);
                     Lcalcultxtbx.Text = FilledInfos.L.ToString();
                     lcalcultxtbx.Text = FilledInfos.l.ToString();
-                    RapportLsurltxtbx.Text = (FilledInfos.L / FilledInfos.l).ToString();
+                    RapportlsurLtxtbx.Text = Math.Round(FilledInfos.l / FilledInfos.L,2).ToString();
+
                     Surfacetxtbx.Text = Math.Round((FilledInfos.L * FilledInfos.l), 3) + " m²";
                 }
 
@@ -906,7 +868,9 @@ namespace GlassMetalProj
             //Hide everyting at the beginning
             Monolithiqueslbl.Visibility = Visibility.Hidden;
             GlazingTypemonolithiquescombobx.Visibility = Visibility.Hidden;
+            GlazingTypemonolithiquescombobx.SelectedIndex = -1;
             epaisseurmonolithiquetxtbx.Visibility = Visibility.Hidden;
+            epaisseurmonolithiquetxtbx.Text = string.Empty;
 
             feuilletelbx.Visibility = Visibility.Hidden;
             GlazingTypeFeuilleté1.Visibility = Visibility.Hidden;
@@ -920,36 +884,57 @@ namespace GlassMetalProj
             epaisseurfeuilleté4txtbx.Visibility = Visibility.Hidden;
 
             isolant2facescombobx.Visibility = Visibility.Hidden;
+            isolant2facescombobx.SelectedIndex = -1;
+
+            isolant3facescombobx.Visibility = Visibility.Hidden;
+            isolant3facescombobx.SelectedIndex = -1;
 
             NextButton.Visibility = Visibility.Hidden;
             BackButton.Visibility = Visibility.Hidden;
+
+            thicknessCalculatebtn.IsEnabled = false;
+
+            IndexInfeuilette = 1;
+            NextButton.IsEnabled = true;
+
+            //Reset everying in FilledInfos
+            FilledInfos.FeuilleteIndex = -1;
+            FilledInfos.FeuilleteIndex2 = -1;
+            FilledInfos.GlazingTypeFromLayersIndexes = new int[4];
+            FilledInfos.GlazingTypeFromLayersIndexes2 = new int[4];
+            FilledInfos.GlazingTypeMonolithiqueIndex = -1;
+            FilledInfos.GlazingTypeMonolithiqueIndex2 = -1;
+            FilledInfos.thicknessformonolithiques = 0;
+            FilledInfos.thicknessformonolithiques2 = 0;
+            FilledInfos.thicknessfromeachLayerfeuillete = new double[4];
+            FilledInfos.thicknessfromeachLayerfeuillete2 = new double[4];
+
 
             if (GlazingTypecombobx.SelectedIndex == 0) 
             {
                 Monolithiqueslbl.Visibility = Visibility.Visible;
                 GlazingTypemonolithiquescombobx.Visibility = Visibility.Visible;
                 epaisseurmonolithiquetxtbx.Visibility = Visibility.Visible;
+                thicknessCalculatebtn.IsEnabled = true;
                 
             }
             if (GlazingTypecombobx.SelectedIndex == 1) 
             {
                 feuilletelbx.Visibility = Visibility.Visible;
+                thicknessCalculatebtn.IsEnabled = true;
             }
             if (GlazingTypecombobx.SelectedIndex == 2) 
             {
                 isolant2facescombobx.Visibility = Visibility.Visible;
             }
-            
-        }
-
-        private void GlazingTypemonolithiquescombobx_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            int i = GlazingTypemonolithiquescombobx.SelectedIndex;
+            if (GlazingTypecombobx.SelectedIndex == 3)
+                isolant3facescombobx.Visibility = Visibility.Visible;
 
         }
 
         private void feuilletelbx_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            //Visual Aspects
             GlazingTypeFeuilleté1.SelectedIndex = -1;
             GlazingTypeFeuilleté2.SelectedIndex = -1;
             GlazingTypeFeuilleté3.SelectedIndex = -1;
@@ -966,6 +951,7 @@ namespace GlassMetalProj
             GlazingTypeFeuilleté2.Visibility = Visibility.Visible;
             GlazingTypeFeuilleté3.Visibility = Visibility.Hidden;
             GlazingTypeFeuilleté4.Visibility = Visibility.Hidden;
+
             int i = feuilletelbx.SelectedIndex;
             switch (i) 
             {
@@ -991,26 +977,783 @@ namespace GlassMetalProj
                 BackButton.Visibility = Visibility.Visible;
                 NextButton.Visibility = Visibility.Visible;
             }
+            isolant2facescombobx.Visibility = Visibility.Hidden;
+
+            //For the first item being displayed
+            switch (isolant2facescombobx.SelectedIndex) 
+            {
+                case 0: case 1:
+                    Monolithiqueslbl.Visibility = Visibility.Visible;
+                    GlazingTypemonolithiquescombobx.Visibility = Visibility.Visible;
+                    epaisseurmonolithiquetxtbx.Visibility = Visibility.Visible;
+                    break;
+
+                case 2: 
+                    feuilletelbx.Visibility = Visibility.Visible;
+                    break;
+            }
            
         }
 
         private void thicknessCalculatebtn_Click(object sender, RoutedEventArgs e)
         {
-            
+            // It means the last used is the monolithiques
+            if (epaisseurmonolithiquetxtbx.Visibility == Visibility.Visible) 
+            {
+                double thickness;
+                if (!Double.TryParse(epaisseurmonolithiquetxtbx.Text, out thickness)) 
+                {
+                    MessageBox.Show("Veuillez rentrer une valeur correcte");
+                }
+                else if (thickness == 0)
+                    MessageBox.Show("L'épaisseur ne peut pas être nulle");
+                else if (GlazingTypemonolithiquescombobx.SelectedIndex == -1)
+                    MessageBox.Show("Veuillez saisir un type de glace");
+                else 
+                {
+                    switch (GlazingTypecombobx.SelectedIndex) 
+                    {
+                        //Case it's only 1 Monolithique
+                        case 0:
+                            mathsHelper.eRCalculation(0, thickness, null, GlazingTypemonolithiquescombobx.SelectedIndex, null, null);
+                            mathsHelper.eFCalculation(0, thickness, null, null);
+                            break;
+                        //Case where we have 2 Monolithiques
+                        case 2:
+                            mathsHelper.eRCalculation(2, thickness, null,GlazingTypemonolithiquescombobx.SelectedIndex,null, null);
+                            mathsHelper.eFCalculation(2, thickness, null, null);
+                            break;
+                        //Case where we have 3 Monolithiques
+                        case 3:
+                            mathsHelper.eRCalculation(3, thickness, null, GlazingTypemonolithiquescombobx.SelectedIndex, null, null);
+                            mathsHelper.eFCalculation(3, thickness, null, null);
+                            break;
+                    }
+                    if (!mathsHelper.eRisValid()) 
+                    {
+                        MessageBox.Show("L'épaisseur de résistance ne vérifie pas la condition : eR ≥ e1 * c \n"
+                            + "Veuillez modifier vos épaisseurs ou bien vos types de vitrages pour avoir un résultat correct");
+                    }
+                    else 
+                    {
+                        eRtxtbox.Text = mathsHelper.eR.ToString();
+                        eFtxtbox.Text = mathsHelper.eF.ToString();
+                    }
+                }
+            }
+            //It means the last used is the feuillete
+            else if (epaisseurfeuilleté1txtbx.Visibility == Visibility.Visible) 
+            {
+                double[] thicknesses = new double[4];
+                //Issues prevention
+                if (GlazingTypeFeuilleté1.SelectedIndex == -1 || GlazingTypeFeuilleté2.SelectedIndex == -1 || (GlazingTypeFeuilleté3.SelectedIndex == -1 && GlazingTypeFeuilleté3.Visibility == Visibility.Visible) || (GlazingTypeFeuilleté4.SelectedIndex == -1 && GlazingTypeFeuilleté4.Visibility == Visibility.Visible))
+                    MessageBox.Show("Veuillez choisir le type du vitrage monolithique pour chaque couche");
+                //Issues prevention for thickness filled infos
+                else if (!Double.TryParse(epaisseurfeuilleté1txtbx.Text, out thicknesses[0]) || !Double.TryParse(epaisseurfeuilleté2txtbx.Text, out thicknesses[1]))
+                {
+                    MessageBox.Show("Veuillez vérifier les informations saisies pour les épaisseurs");
+                }
+                else if (thicknesses[0] == 0 || thicknesses[1] == 0)
+                    MessageBox.Show("Les épaisseurs ne peuvent pas être nulles");
+
+                else if ((epaisseurfeuilleté3txtbx.Visibility == Visibility.Visible && !Double.TryParse(epaisseurfeuilleté3txtbx.Text, out thicknesses[2])))
+                {
+                    MessageBox.Show("Veuillez vérifier les informations saisies pour les épaisseurs");
+                }
+                else if ((epaisseurfeuilleté4txtbx.Visibility == Visibility.Visible && !Double.TryParse(epaisseurfeuilleté4txtbx.Text, out thicknesses[3])))
+                {
+                    MessageBox.Show("Veuillez vérifier les informations saisies pour les épaisseurs");
+                }
+                else if ((epaisseurfeuilleté3txtbx.Visibility == Visibility.Visible && thicknesses[2] == 0) || (epaisseurfeuilleté4txtbx.Visibility == Visibility.Visible && thicknesses[3] == 0))
+                    MessageBox.Show("les épaisseurs ne peuvent pas être nulles");
+                else 
+                {
+                    int[] indexesForGlazingMono = new int[4];
+                    int[] indexesEpsilon2 = new int[3]; 
+                    indexesForGlazingMono[0] = GlazingTypeFeuilleté1.SelectedIndex;
+                    indexesForGlazingMono[1] = GlazingTypeFeuilleté2.SelectedIndex;
+                    indexesForGlazingMono[2] = GlazingTypeFeuilleté3.SelectedIndex;
+                    indexesForGlazingMono[3] = GlazingTypeFeuilleté4.SelectedIndex;
+                    switch (GlazingTypecombobx.SelectedIndex) 
+                    {
+                        //It's 1 Feuilleté
+                        case 1:
+                            indexesEpsilon2[0] = feuilletelbx.SelectedIndex;
+                            mathsHelper.eRCalculation(1, 0, thicknesses, -1, indexesForGlazingMono,indexesEpsilon2);
+                            mathsHelper.eFCalculation(1, 0, thicknesses, indexesEpsilon2);
+                            break;
+                        //It's 1 monolithique + 1 feuilleté or it's double feuilleté
+                        case 2:
+                            if (isolant2facescombobx.SelectedIndex == 1)
+                                indexesEpsilon2[0] = feuilletelbx.SelectedIndex;
+                            else 
+                            {
+                                indexesEpsilon2[0] = FilledInfos.FeuilleteIndex;
+                                indexesEpsilon2[1] = feuilletelbx.SelectedIndex;
+                            }
+                                mathsHelper.eRCalculation(2, 0, thicknesses, -1, indexesForGlazingMono, indexesEpsilon2);
+                                mathsHelper.eFCalculation(2, 0, thicknesses, indexesEpsilon2);
+                            break;
+                        //it's 2 monolithiques + 1 feuilleté, or 1 monolithique
+                        case 3:
+                            if (isolant3facescombobx.SelectedIndex == 1)
+                                indexesEpsilon2[0] = feuilletelbx.SelectedIndex;
+                            else if (isolant3facescombobx.SelectedIndex == 2) 
+                            {
+                                indexesEpsilon2[0] = FilledInfos.FeuilleteIndex2;
+                                indexesEpsilon2[1] = feuilletelbx.SelectedIndex;
+                            }
+                            else if (isolant3facescombobx.SelectedIndex == 3) 
+                            {
+                                indexesEpsilon2[0] = FilledInfos.FeuilleteIndex;
+                                indexesEpsilon2[1] = FilledInfos.FeuilleteIndex2;
+                                indexesEpsilon2[2] = feuilletelbx.SelectedIndex;
+                            }
+
+                            mathsHelper.eRCalculation(3, 0, thicknesses, -1, indexesForGlazingMono, indexesEpsilon2);
+                            mathsHelper.eFCalculation(3, 0, thicknesses, indexesEpsilon2);
+                            break;
+                    }
+                    if (!mathsHelper.eRisValid())
+                    {
+                        MessageBox.Show("L'épaisseur de résistance ne vérifie pas la condition : eR ≥ e1 * c \n"
+                            + "Veuillez modifier vos épaisseurs ou bien vos types de vitrages pour avoir un résultat correct");
+                    }
+                    else
+                    {
+                        eRtxtbox.Text = mathsHelper.eR.ToString();
+                        eFtxtbox.Text = mathsHelper.eF.ToString();
+                    }
+                }
+
+            }
         }
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
-            if (IndexInfeuilette == 0)
-                BackButton.IsEnabled = true;
             IndexInfeuilette++;
+
+            //Managing with saving the infos that we wrote (Need to do before the step after)
+            if (IndexInfeuilette == 2)
+            {
+                //Isolant 2 faces
+                //We display things depending on the type of glazing we have on the layer
+                if (isolant2facescombobx.SelectedIndex == 0)
+                {
+                    //Issues Prevention
+                    if (!Double.TryParse(epaisseurmonolithiquetxtbx.Text, out FilledInfos.thicknessformonolithiques))
+                    {
+                        MessageBox.Show("Veuillez entrer une valeur correcte");
+                        IndexInfeuilette--;
+                    }
+                    else if (FilledInfos.thicknessformonolithiques == 0) 
+                    {
+                        MessageBox.Show("L'épaisseur ne peut pas être nulle");
+                        IndexInfeuilette--;
+                    }
+                    else if (GlazingTypemonolithiquescombobx.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("Veuillez choisir le type du vitrage monolithique");
+                        IndexInfeuilette--;
+                    }
+                    //Else we go to the next step 
+                    else
+                    {
+                        FilledInfos.GlazingTypeMonolithiqueIndex = GlazingTypemonolithiquescombobx.SelectedIndex;
+                        GlazingTypemonolithiquescombobx.SelectedIndex = -1;
+                        epaisseurmonolithiquetxtbx.Text = string.Empty;
+                    }
+                }
+
+                else if (isolant2facescombobx.SelectedIndex == 1)
+                {
+                    //Issues Prevention
+                    if (!Double.TryParse(epaisseurmonolithiquetxtbx.Text, out FilledInfos.thicknessformonolithiques))
+                    {
+                        MessageBox.Show("Veuillez entrer une valeur correcte");
+                        IndexInfeuilette--;
+                    }
+                    else if (FilledInfos.thicknessformonolithiques == 0) 
+                    {
+                        MessageBox.Show("L'épaisseur ne peut pas être nulle");
+                        IndexInfeuilette--;
+                    }
+                    else if (GlazingTypemonolithiquescombobx.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("Veuillez choisir le type du vitrage monolithique");
+                        IndexInfeuilette--;
+                    }
+                    else
+                    {
+                        epaisseurmonolithiquetxtbx.Text = string.Empty;
+                        epaisseurmonolithiquetxtbx.Visibility = Visibility.Hidden;
+                        Monolithiqueslbl.Visibility = Visibility.Hidden;
+                        FilledInfos.GlazingTypeMonolithiqueIndex = GlazingTypemonolithiquescombobx.SelectedIndex;
+                        GlazingTypemonolithiquescombobx.Visibility = Visibility.Hidden;
+                        feuilletelbx.Visibility = Visibility.Visible;
+                    }
+
+                }
+                else if (isolant2facescombobx.SelectedIndex == 2)
+                {
+                    //Issues prevention
+                    if (GlazingTypeFeuilleté1.SelectedIndex == -1 || GlazingTypeFeuilleté2.SelectedIndex == -1 || (GlazingTypeFeuilleté3.SelectedIndex == -1 && GlazingTypeFeuilleté3.Visibility == Visibility.Visible) || (GlazingTypeFeuilleté4.SelectedIndex == -1 && GlazingTypeFeuilleté4.Visibility == Visibility.Visible))
+                    {
+                        MessageBox.Show("Veuillez choisir le type du vitrage monolithique pour chaque couche");
+                        IndexInfeuilette--;
+                    }
+                    //Issues prevention for thickness filled infos
+                    else if (!Double.TryParse(epaisseurfeuilleté1txtbx.Text, out FilledInfos.thicknessfromeachLayerfeuillete[0]) || !Double.TryParse(epaisseurfeuilleté2txtbx.Text, out FilledInfos.thicknessfromeachLayerfeuillete[1]))
+                    {
+                        MessageBox.Show("Veuillez vérifier les informations saisies pour les épaisseurs");
+                        IndexInfeuilette--;
+                    }
+                    else if (FilledInfos.thicknessfromeachLayerfeuillete[0] == 0 || FilledInfos.thicknessfromeachLayerfeuillete[1] == 0) 
+                    {
+                        MessageBox.Show("Les épaisseurs ne peuvent pas être nulles");
+                        IndexInfeuilette--;
+                    }
+                    else if ((epaisseurfeuilleté3txtbx.Visibility == Visibility.Visible && !Double.TryParse(epaisseurfeuilleté3txtbx.Text, out FilledInfos.thicknessfromeachLayerfeuillete[2])))
+                    {
+                        MessageBox.Show("Veuillez vérifier les informations saisies pour les épaisseurs");
+                        IndexInfeuilette--;
+                    }
+                    else if ((epaisseurfeuilleté4txtbx.Visibility == Visibility.Visible && !Double.TryParse(epaisseurfeuilleté4txtbx.Text, out FilledInfos.thicknessfromeachLayerfeuillete[3])))
+                    {
+                        MessageBox.Show("Veuillez vérifier les informations saisies pour les épaisseurs");
+                        IndexInfeuilette--;
+                    }
+                    else if ((epaisseurfeuilleté3txtbx.Visibility == Visibility.Visible && FilledInfos.thicknessfromeachLayerfeuillete[2] == 0) || (epaisseurfeuilleté4txtbx.Visibility == Visibility.Visible && FilledInfos.thicknessfromeachLayerfeuillete[3] == 0)) 
+                    {
+                        MessageBox.Show("Les épaisseurs ne peuvent pas être nulles");
+                        IndexInfeuilette--;
+                    }
+                    else
+                    {
+                        FilledInfos.FeuilleteIndex = feuilletelbx.SelectedIndex;
+                        FilledInfos.GlazingTypeFromLayersIndexes[0] = GlazingTypeFeuilleté1.SelectedIndex;
+                        FilledInfos.GlazingTypeFromLayersIndexes[1] = GlazingTypeFeuilleté2.SelectedIndex;
+                        FilledInfos.GlazingTypeFromLayersIndexes[2] = GlazingTypeFeuilleté3.SelectedIndex;
+                        FilledInfos.GlazingTypeFromLayersIndexes[3] = GlazingTypeFeuilleté4.SelectedIndex;
+
+                        feuilletelbx.SelectedIndex = -1;
+                        epaisseurfeuilleté1txtbx.Visibility = Visibility.Hidden;
+                        epaisseurfeuilleté2txtbx.Visibility = Visibility.Hidden;
+                        GlazingTypeFeuilleté1.Visibility = Visibility.Hidden;
+                        GlazingTypeFeuilleté2.Visibility = Visibility.Hidden;
+                    }
+
+                }
+
+                //Isolant 3 faces
+                else if (isolant3facescombobx.SelectedIndex == 0 || isolant3facescombobx.SelectedIndex == 1)
+                {
+                    //Issues Prevention
+                    if (!Double.TryParse(epaisseurmonolithiquetxtbx.Text, out FilledInfos.thicknessformonolithiques))
+                    {
+                        MessageBox.Show("Veuillez entrer une valeur correcte");
+                        IndexInfeuilette--;
+                    }
+                    else if (FilledInfos.thicknessformonolithiques == 0) 
+                    {
+                        MessageBox.Show("L'épaisseur ne peut pas être nulle");
+                        IndexInfeuilette--;
+                    }
+                    else if (GlazingTypemonolithiquescombobx.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("Veuillez choisir le type du vitrage monolithique");
+                        IndexInfeuilette--;
+                    }
+                    //Else we go to the next step 
+                    else
+                    {
+                        FilledInfos.GlazingTypeMonolithiqueIndex = GlazingTypemonolithiquescombobx.SelectedIndex;
+                        if (FilledInfos.GlazingTypeMonolithiqueIndex2 != -1)
+                        {
+                            GlazingTypemonolithiquescombobx.SelectedIndex = FilledInfos.GlazingTypeMonolithiqueIndex2;
+                            epaisseurmonolithiquetxtbx.Text = FilledInfos.thicknessformonolithiques2.ToString();
+                        }
+                        else
+                        {
+                            GlazingTypemonolithiquescombobx.SelectedIndex = -1;
+                            epaisseurmonolithiquetxtbx.Text = string.Empty;
+                        }
+                    }
+                }
+                else if (isolant3facescombobx.SelectedIndex == 2)
+                {
+                    //Issues Prevention
+                    if (!Double.TryParse(epaisseurmonolithiquetxtbx.Text, out FilledInfos.thicknessformonolithiques))
+                    {
+                        MessageBox.Show("Veuillez entrer une valeur correcte");
+                        IndexInfeuilette--;
+                    }
+                    else if (GlazingTypemonolithiquescombobx.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("Veuillez choisir le type du vitrage monolithique");
+                        IndexInfeuilette--;
+                    }
+                    else if (FilledInfos.thicknessformonolithiques == 0) 
+                    {
+                        MessageBox.Show("L'épaisseur ne peut pas être nulle");
+                        IndexInfeuilette--;
+                    }
+                    else
+                    {
+                        epaisseurmonolithiquetxtbx.Text = string.Empty;
+                        epaisseurmonolithiquetxtbx.Visibility = Visibility.Hidden;
+                        Monolithiqueslbl.Visibility = Visibility.Hidden;
+                        FilledInfos.GlazingTypeMonolithiqueIndex = GlazingTypemonolithiquescombobx.SelectedIndex;
+                        GlazingTypemonolithiquescombobx.Visibility = Visibility.Hidden;
+                        feuilletelbx.Visibility = Visibility.Visible;
+
+                        //It means that we had already done it before, so we redisplay the infos 
+                        if (FilledInfos.FeuilleteIndex2 != -1) 
+                        {
+                            feuilletelbx.SelectedIndex = FilledInfos.FeuilleteIndex2;
+                            GlazingTypeFeuilleté1.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes2[0];
+                            GlazingTypeFeuilleté2.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes2[1];
+                            epaisseurfeuilleté1txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete2[0].ToString();
+                            epaisseurfeuilleté2txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete2[1].ToString();
+                            if (GlazingTypeFeuilleté3.Visibility == Visibility.Visible) 
+                            {
+                                GlazingTypeFeuilleté3.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes2[2];
+                                epaisseurfeuilleté3txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete2[2].ToString();
+
+                            }
+                            if (GlazingTypeFeuilleté4.Visibility == Visibility.Visible) 
+                            {
+                                GlazingTypeFeuilleté4.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes2[3];
+                                epaisseurfeuilleté4txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete2[3].ToString();
+                            }
+
+                        }
+                    }
+                }
+                else if (isolant3facescombobx.SelectedIndex == 3)
+                {
+                    //Issues prevention
+                    if (GlazingTypeFeuilleté1.SelectedIndex == -1 || GlazingTypeFeuilleté2.SelectedIndex == -1 || (GlazingTypeFeuilleté3.SelectedIndex == -1 && GlazingTypeFeuilleté3.Visibility == Visibility.Visible) || (GlazingTypeFeuilleté4.SelectedIndex == -1 && GlazingTypeFeuilleté4.Visibility == Visibility.Visible))
+                    {
+                        MessageBox.Show("Veuillez choisir le type du vitrage monolithique pour chaque couche");
+                        IndexInfeuilette--;
+                    }
+                    //Issues prevention for thickness filled infos
+                    else if (!Double.TryParse(epaisseurfeuilleté1txtbx.Text, out FilledInfos.thicknessfromeachLayerfeuillete[0]) || !Double.TryParse(epaisseurfeuilleté2txtbx.Text, out FilledInfos.thicknessfromeachLayerfeuillete[1]))
+                    {
+                        MessageBox.Show("Veuillez vérifier les informations saisies pour les épaisseurs");
+                        IndexInfeuilette--;
+                    }
+                    else if (FilledInfos.thicknessfromeachLayerfeuillete[0] == 0 || FilledInfos.thicknessfromeachLayerfeuillete[1] == 0) 
+                    {
+                        MessageBox.Show("Les épaisseurs ne peuvent pas être nulles");
+                        IndexInfeuilette--;
+                    }
+
+                    else if ((epaisseurfeuilleté3txtbx.Visibility == Visibility.Visible && !Double.TryParse(epaisseurfeuilleté3txtbx.Text, out FilledInfos.thicknessfromeachLayerfeuillete[2])))
+                    {
+                        MessageBox.Show("Veuillez vérifier les informations saisies pour les épaisseurs");
+                        IndexInfeuilette--;
+                    }
+                    else if ((epaisseurfeuilleté4txtbx.Visibility == Visibility.Visible && !Double.TryParse(epaisseurfeuilleté4txtbx.Text, out FilledInfos.thicknessfromeachLayerfeuillete[3])))
+                    {
+                        MessageBox.Show("Veuillez vérifier les informations saisies pour les épaisseurs");
+                        IndexInfeuilette--;
+                    }
+                    else if ((epaisseurfeuilleté3txtbx.Visibility == Visibility.Visible && FilledInfos.thicknessfromeachLayerfeuillete[2] == 0) || (epaisseurfeuilleté4txtbx.Visibility == Visibility.Visible && FilledInfos.thicknessfromeachLayerfeuillete[3] == 0)) 
+                    {
+                        MessageBox.Show("Les épaisseurs ne peuvent pas être nulles");
+                        IndexInfeuilette--;
+                    }
+                    else
+                    {
+                        FilledInfos.FeuilleteIndex = feuilletelbx.SelectedIndex;
+                        FilledInfos.GlazingTypeFromLayersIndexes[0] = GlazingTypeFeuilleté1.SelectedIndex;
+                        FilledInfos.GlazingTypeFromLayersIndexes[1] = GlazingTypeFeuilleté2.SelectedIndex;
+                        FilledInfos.GlazingTypeFromLayersIndexes[2] = GlazingTypeFeuilleté3.SelectedIndex;
+                        FilledInfos.GlazingTypeFromLayersIndexes[3] = GlazingTypeFeuilleté4.SelectedIndex;
+
+                        if (FilledInfos.FeuilleteIndex2 != -1) 
+                        {
+                            feuilletelbx.SelectedIndex = FilledInfos.FeuilleteIndex2;
+                            GlazingTypeFeuilleté1.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes2[0];
+                            GlazingTypeFeuilleté2.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes2[1];
+                            epaisseurfeuilleté1txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete2[0].ToString();
+                            epaisseurfeuilleté2txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete2[1].ToString();
+                            if (GlazingTypeFeuilleté3.Visibility == Visibility.Visible)
+                            {
+                                GlazingTypeFeuilleté3.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes2[2];
+                                epaisseurfeuilleté3txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete2[2].ToString();
+
+                            }
+                            if (GlazingTypeFeuilleté4.Visibility == Visibility.Visible)
+                            {
+                                GlazingTypeFeuilleté4.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes2[3];
+                                epaisseurfeuilleté4txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete2[3].ToString();
+                            }
+                        }
+                        else 
+                        {
+                            feuilletelbx.SelectedIndex = -1;
+                            epaisseurfeuilleté1txtbx.Visibility = Visibility.Hidden;
+                            epaisseurfeuilleté2txtbx.Visibility = Visibility.Hidden;
+                            GlazingTypeFeuilleté1.Visibility = Visibility.Hidden;
+                            GlazingTypeFeuilleté2.Visibility = Visibility.Hidden;
+                        }   
+                    }
+                }
+            }
+            else if (IndexInfeuilette == 3)
+            {
+                if (isolant3facescombobx.SelectedIndex == 0)
+                {
+                    //Issues Prevention
+                    if (!Double.TryParse(epaisseurmonolithiquetxtbx.Text, out FilledInfos.thicknessformonolithiques2))
+                    {
+                        MessageBox.Show("Veuillez entrer une valeur correcte");
+                        IndexInfeuilette--;
+                    }
+
+                    else if (GlazingTypemonolithiquescombobx.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("Veuillez choisir le type du vitrage monolithique");
+                        IndexInfeuilette--;
+                    }
+                    if (FilledInfos.thicknessformonolithiques2 == 0) 
+                    {
+                        MessageBox.Show("L'épaisseur ne peut pas être nulle");
+                        IndexInfeuilette--;
+                    }
+                    //Else we go to the next step 
+                    else
+                    {
+                        FilledInfos.GlazingTypeMonolithiqueIndex2 = GlazingTypemonolithiquescombobx.SelectedIndex;
+                        GlazingTypemonolithiquescombobx.SelectedIndex = -1;
+                        epaisseurmonolithiquetxtbx.Text = string.Empty;
+                    }
+                }
+                else if (isolant3facescombobx.SelectedIndex == 1)
+                {
+                    //Issues Prevention
+                    if (!Double.TryParse(epaisseurmonolithiquetxtbx.Text, out FilledInfos.thicknessformonolithiques2))
+                    {
+                        MessageBox.Show("Veuillez entrer une valeur correcte");
+                        IndexInfeuilette--;
+                    }
+                    if (FilledInfos.thicknessformonolithiques2 == 0)
+                    {
+                        MessageBox.Show("L'épaisseur ne peut pas être nulle");
+                        IndexInfeuilette--;
+                    }    
+                    else if (GlazingTypemonolithiquescombobx.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("Veuillez choisir le type du vitrage monolithique");
+                        IndexInfeuilette--;
+                    }
+                    else
+                    {
+                        epaisseurmonolithiquetxtbx.Text = string.Empty;
+                        epaisseurmonolithiquetxtbx.Visibility = Visibility.Hidden;
+                        Monolithiqueslbl.Visibility = Visibility.Hidden;
+                        GlazingTypemonolithiquescombobx.Visibility = Visibility.Hidden;
+                        FilledInfos.GlazingTypeMonolithiqueIndex2 = GlazingTypemonolithiquescombobx.SelectedIndex;
+                        feuilletelbx.Visibility = Visibility.Visible;
+                    }
+                }
+                else if (isolant3facescombobx.SelectedIndex == 2 || isolant3facescombobx.SelectedIndex == 3) 
+                {
+                    //Issues prevention
+                    if (GlazingTypeFeuilleté1.SelectedIndex == -1 || GlazingTypeFeuilleté2.SelectedIndex == -1 || (GlazingTypeFeuilleté3.SelectedIndex == -1 && GlazingTypeFeuilleté3.Visibility == Visibility.Visible) || (GlazingTypeFeuilleté4.SelectedIndex == -1 && GlazingTypeFeuilleté4.Visibility == Visibility.Visible))
+                    {
+                        MessageBox.Show("Veuillez choisir le type du vitrage monolithique pour chaque couche");
+                        IndexInfeuilette--;
+                    }
+                    //Issues prevention for thickness filled infos
+                    else if (!Double.TryParse(epaisseurfeuilleté1txtbx.Text, out FilledInfos.thicknessfromeachLayerfeuillete2[0]) || !Double.TryParse(epaisseurfeuilleté2txtbx.Text, out FilledInfos.thicknessfromeachLayerfeuillete2[1]))
+                    {
+                        MessageBox.Show("Veuillez vérifier les informations saisies pour les épaisseurs");
+                        IndexInfeuilette--;
+                    }
+                    else if (FilledInfos.thicknessfromeachLayerfeuillete2[0] == 0 || FilledInfos.thicknessfromeachLayerfeuillete2[1] == 0)
+                    {
+                        MessageBox.Show("Les épaisseurs ne peuvent pas être nulles");
+                        IndexInfeuilette--;
+                    }
+                    else if ((epaisseurfeuilleté3txtbx.Visibility == Visibility.Visible && !Double.TryParse(epaisseurfeuilleté3txtbx.Text, out FilledInfos.thicknessfromeachLayerfeuillete2[2])))
+                    {
+                        MessageBox.Show("Veuillez vérifier les informations saisies pour les épaisseurs");
+                        IndexInfeuilette--;
+                    }
+                    else if ((epaisseurfeuilleté4txtbx.Visibility == Visibility.Visible && !Double.TryParse(epaisseurfeuilleté4txtbx.Text, out FilledInfos.thicknessfromeachLayerfeuillete2[3])))
+                    {
+                        MessageBox.Show("Veuillez vérifier les informations saisies pour les épaisseurs");
+                        IndexInfeuilette--;
+                    }
+                    else if ((epaisseurfeuilleté3txtbx.Visibility == Visibility.Visible && FilledInfos.thicknessfromeachLayerfeuillete2[2] == 0) || (epaisseurfeuilleté4txtbx.Visibility == Visibility.Visible && FilledInfos.thicknessfromeachLayerfeuillete2[3] == 0))
+                    {
+                        MessageBox.Show("Les épaisseurs ne peuvent pas être nulles");
+                        IndexInfeuilette--;
+                    }
+                    else
+                    {
+                        FilledInfos.FeuilleteIndex2 = feuilletelbx.SelectedIndex;
+                        FilledInfos.GlazingTypeFromLayersIndexes2[0] = GlazingTypeFeuilleté1.SelectedIndex;
+                        FilledInfos.GlazingTypeFromLayersIndexes2[1] = GlazingTypeFeuilleté2.SelectedIndex;
+                        FilledInfos.GlazingTypeFromLayersIndexes2[2] = GlazingTypeFeuilleté3.SelectedIndex;
+                        FilledInfos.GlazingTypeFromLayersIndexes2[3] = GlazingTypeFeuilleté4.SelectedIndex;
+
+                        feuilletelbx.SelectedIndex = -1;
+                        epaisseurfeuilleté1txtbx.Visibility = Visibility.Hidden;
+                        epaisseurfeuilleté2txtbx.Visibility = Visibility.Hidden;
+                        GlazingTypeFeuilleté1.Visibility = Visibility.Hidden;
+                        GlazingTypeFeuilleté2.Visibility = Visibility.Hidden;
+                    }
+                }
+            }
+
+            //We enable the button, depending if we need 2 or 3 layers of glazing 
+            if (GlazingTypecombobx.SelectedIndex == 2) 
+            {
+                if (IndexInfeuilette == 2) 
+                {
+                    thicknessCalculatebtn.IsEnabled = true;
+                    NextButton.IsEnabled = false;
+                }
+            }
+            else if (GlazingTypecombobx.SelectedIndex == 3) 
+            {
+                if (IndexInfeuilette == 3) 
+                {
+                    NextButton.IsEnabled = false;
+                    thicknessCalculatebtn.IsEnabled = true;
+                }
+            }
+            
+             
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            if (IndexInfeuilette == 1)
-                BackButton.IsEnabled = false;
             IndexInfeuilette--;
+
+            thicknessCalculatebtn.IsEnabled = false;
+
+            if (IndexInfeuilette < 0)
+                IndexInfeuilette = 0;
+
+            //We change the type of our glazing (double feuilleté, monolithique + feuilleté...)
+            if (IndexInfeuilette == 0)
+            {
+                BackButton.Visibility = Visibility.Hidden;
+                NextButton.Visibility = Visibility.Hidden;
+
+                //Reset everying in FilledInfos
+                FilledInfos.FeuilleteIndex = -1;
+                FilledInfos.FeuilleteIndex2 = -1;
+                FilledInfos.GlazingTypeFromLayersIndexes = new int[4];
+                FilledInfos.GlazingTypeFromLayersIndexes2 = new int[4];
+                FilledInfos.GlazingTypeMonolithiqueIndex = -1;
+                FilledInfos.GlazingTypeMonolithiqueIndex2 = -1;
+                FilledInfos.thicknessformonolithiques = 0;
+                FilledInfos.thicknessformonolithiques2 = 0;
+                FilledInfos.thicknessfromeachLayerfeuillete = new double[4];
+                FilledInfos.thicknessfromeachLayerfeuillete2 = new double[4];
+
+                if (GlazingTypecombobx.SelectedIndex == 2)
+                    isolant2facescombobx.Visibility = Visibility.Visible;
+                else if (GlazingTypecombobx.SelectedIndex == 3)
+                    isolant3facescombobx.Visibility = Visibility.Visible;
+
+                Monolithiqueslbl.Visibility = Visibility.Hidden;
+                epaisseurmonolithiquetxtbx.Visibility = Visibility.Hidden;
+                epaisseurmonolithiquetxtbx.Text = string.Empty;
+                GlazingTypemonolithiquescombobx.SelectedIndex = -1;
+                GlazingTypemonolithiquescombobx.Visibility = Visibility.Hidden;
+
+                feuilletelbx.SelectedIndex = -1;
+                feuilletelbx.Visibility = Visibility.Hidden;
+
+                epaisseurfeuilleté1txtbx.Visibility = Visibility.Hidden;
+                epaisseurfeuilleté2txtbx.Visibility = Visibility.Hidden;
+                GlazingTypeFeuilleté1.Visibility = Visibility.Hidden;
+                GlazingTypeFeuilleté2.Visibility = Visibility.Hidden;
+
+                IndexInfeuilette = 1;
+
+            }
+
+            //Isolant 2 faces
+            else if (GlazingTypecombobx.SelectedIndex == 2) 
+            {
+                if (IndexInfeuilette == 1 )
+                {
+                    NextButton.IsEnabled = true;
+                    switch (isolant2facescombobx.SelectedIndex)
+                    {
+                        case 0:
+                            //We need to get Back our infos and redisplay our things
+                            epaisseurmonolithiquetxtbx.Text = FilledInfos.thicknessformonolithiques.ToString();
+                            GlazingTypemonolithiquescombobx.SelectedIndex = FilledInfos.GlazingTypeMonolithiqueIndex;
+                            break;
+                        case 1:
+                            Monolithiqueslbl.Visibility = Visibility.Visible;
+                            epaisseurmonolithiquetxtbx.Visibility = Visibility.Visible;
+                            GlazingTypemonolithiquescombobx.Visibility = Visibility.Visible;
+                            epaisseurmonolithiquetxtbx.Text = FilledInfos.thicknessformonolithiques.ToString();
+                            GlazingTypemonolithiquescombobx.SelectedIndex = FilledInfos.GlazingTypeMonolithiqueIndex;
+
+                            //Putting the SelectedIndex = -1 call the selection changed method of the feuilletelbx
+                            //which makes almost all the job of hiding
+                            feuilletelbx.SelectedIndex = -1;
+                            epaisseurfeuilleté1txtbx.Visibility = Visibility.Hidden;
+                            epaisseurfeuilleté2txtbx.Visibility = Visibility.Hidden;
+                            GlazingTypeFeuilleté1.Visibility = Visibility.Hidden;
+                            GlazingTypeFeuilleté2.Visibility = Visibility.Hidden;
+                            feuilletelbx.Visibility = Visibility.Hidden;
+                            break;
+                        case 2:
+                            feuilletelbx.SelectedIndex = FilledInfos.FeuilleteIndex;
+                            GlazingTypeFeuilleté1.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes[0];
+                            GlazingTypeFeuilleté2.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes[1];
+                            epaisseurfeuilleté1txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete[0].ToString();
+                            epaisseurfeuilleté2txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete[1].ToString();
+                            if (epaisseurfeuilleté3txtbx.Visibility == Visibility.Visible)
+                            {
+                                GlazingTypeFeuilleté3.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes[2];
+                                epaisseurfeuilleté3txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete[2].ToString();
+                            }
+
+                            if (epaisseurfeuilleté4txtbx.Visibility == Visibility.Visible)
+                            {
+                                GlazingTypeFeuilleté4.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes[3];
+                                epaisseurfeuilleté4txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete[3].ToString();
+                            }
+                            break;
+                    }
+                }
+            }
+
+            else if (GlazingTypecombobx.SelectedIndex == 3) 
+            {
+                if (IndexInfeuilette == 1) 
+                {
+                    switch (isolant3facescombobx.SelectedIndex) 
+                    {
+                        case 0: case 1:
+                            //We need to get Back our infos and redisplay our things
+                            epaisseurmonolithiquetxtbx.Text = FilledInfos.thicknessformonolithiques.ToString();
+                            GlazingTypemonolithiquescombobx.SelectedIndex = FilledInfos.GlazingTypeMonolithiqueIndex;
+                            break;
+                        case 2:
+                            Monolithiqueslbl.Visibility = Visibility.Visible;
+                            epaisseurmonolithiquetxtbx.Visibility = Visibility.Visible;
+                            GlazingTypemonolithiquescombobx.Visibility = Visibility.Visible;
+                            epaisseurmonolithiquetxtbx.Text = FilledInfos.thicknessformonolithiques.ToString();
+                            GlazingTypemonolithiquescombobx.SelectedIndex = FilledInfos.GlazingTypeMonolithiqueIndex;
+
+                            //Putting the SelectedIndex = -1 call the selection changed method of the feuilletelbx
+                            //which makes almost all the job of hiding
+                            feuilletelbx.SelectedIndex = -1;
+                            epaisseurfeuilleté1txtbx.Visibility = Visibility.Hidden;
+                            epaisseurfeuilleté2txtbx.Visibility = Visibility.Hidden;
+                            GlazingTypeFeuilleté1.Visibility = Visibility.Hidden;
+                            GlazingTypeFeuilleté2.Visibility = Visibility.Hidden;
+                            feuilletelbx.Visibility = Visibility.Hidden;
+                            break;
+                        case 3:
+                            feuilletelbx.SelectedIndex = FilledInfos.FeuilleteIndex;
+                            GlazingTypeFeuilleté1.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes[0];
+                            GlazingTypeFeuilleté2.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes[1];
+                            epaisseurfeuilleté1txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete[0].ToString();
+                            epaisseurfeuilleté2txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete[1].ToString();
+                            if (epaisseurfeuilleté3txtbx.Visibility == Visibility.Visible)
+                            {
+                                GlazingTypeFeuilleté3.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes[2];
+                                epaisseurfeuilleté3txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete[2].ToString();
+                            }
+
+                            if (epaisseurfeuilleté4txtbx.Visibility == Visibility.Visible)
+                            {
+                                GlazingTypeFeuilleté4.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes[3];
+                                epaisseurfeuilleté4txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete[3].ToString();
+                            }
+                            break;
+
+                    }
+                }
+
+                if (IndexInfeuilette == 2) 
+                {
+                    NextButton.IsEnabled = true;
+
+                    switch (isolant3facescombobx.SelectedIndex)
+                    {
+                        case 0:
+                            //We need to get Back our infos and redisplay our things
+                            epaisseurmonolithiquetxtbx.Text = FilledInfos.thicknessformonolithiques2.ToString();
+                            GlazingTypemonolithiquescombobx.SelectedIndex = FilledInfos.GlazingTypeMonolithiqueIndex2;
+                            break;
+                        case 1:
+                            Monolithiqueslbl.Visibility = Visibility.Visible;
+                            epaisseurmonolithiquetxtbx.Visibility = Visibility.Visible;
+                            GlazingTypemonolithiquescombobx.Visibility = Visibility.Visible;
+                            epaisseurmonolithiquetxtbx.Text = FilledInfos.thicknessformonolithiques2.ToString();
+                            GlazingTypemonolithiquescombobx.SelectedIndex = FilledInfos.GlazingTypeMonolithiqueIndex2;
+
+                            //Putting the SelectedIndex = -1 call the selection changed method of the feuilletelbx
+                            //which makes almost all the job of hiding
+                            feuilletelbx.SelectedIndex = -1;
+                            epaisseurfeuilleté1txtbx.Visibility = Visibility.Hidden;
+                            epaisseurfeuilleté2txtbx.Visibility = Visibility.Hidden;
+                            GlazingTypeFeuilleté1.Visibility = Visibility.Hidden;
+                            GlazingTypeFeuilleté2.Visibility = Visibility.Hidden;
+                            feuilletelbx.Visibility = Visibility.Hidden;
+                            break;
+                        case 2: case 3:
+                            feuilletelbx.SelectedIndex = FilledInfos.FeuilleteIndex2;
+                            GlazingTypeFeuilleté1.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes2[0];
+                            GlazingTypeFeuilleté2.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes2[1];
+                            epaisseurfeuilleté1txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete2[0].ToString();
+                            epaisseurfeuilleté2txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete2[1].ToString();
+                            if (epaisseurfeuilleté3txtbx.Visibility == Visibility.Visible)
+                            {
+                                GlazingTypeFeuilleté3.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes2[2];
+                                epaisseurfeuilleté3txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete2[2].ToString();
+                            }
+
+                            if (epaisseurfeuilleté4txtbx.Visibility == Visibility.Visible)
+                            {
+                                GlazingTypeFeuilleté4.SelectedIndex = FilledInfos.GlazingTypeFromLayersIndexes2[3];
+                                epaisseurfeuilleté4txtbx.Text = FilledInfos.thicknessfromeachLayerfeuillete2[3].ToString();
+                            }
+                            break;
+                    }
+                }
+            }
+            
+        }
+
+        private void isolant3facescombobx_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (BackButton.Visibility != Visibility.Visible && NextButton.Visibility != Visibility.Visible)
+            {
+                BackButton.Visibility = Visibility.Visible;
+                NextButton.Visibility = Visibility.Visible;
+            }
+            isolant3facescombobx.Visibility = Visibility.Hidden;
+
+            switch (isolant3facescombobx.SelectedIndex) 
+            {
+                case 0: case 1: case 2:
+                    Monolithiqueslbl.Visibility = Visibility.Visible;
+                    GlazingTypemonolithiquescombobx.Visibility = Visibility.Visible;
+                    epaisseurmonolithiquetxtbx.Visibility = Visibility.Visible;
+                    break;
+                case 3:
+                    feuilletelbx.Visibility = Visibility.Visible;
+                    break;
+
+            }
         }
     }
 }

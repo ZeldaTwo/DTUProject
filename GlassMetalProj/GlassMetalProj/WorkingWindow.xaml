@@ -94,9 +94,6 @@
 
         </ComboBox>
 
-        <Button x:Name="Cancel_Button" Content="Annulez les infos" Grid.Column="0" Grid.Row="0"  Visibility="Hidden" Click="Cancel_Button_Click" Margin="392,30,47,241"/>
-
-
         <!--Button Question Mark-->
         <Button x:Name="HelpButtonRegion" Width="23" Height="20" Visibility="Hidden"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
@@ -146,7 +143,7 @@
 
         <Label Content="Pression (Pa) :" Grid.Row="1" Width="140" Height="50" FontSize="14
                " Margin="5,283,405,-8" RenderTransformOrigin="0.754,0.425" Grid.Column="1" />
-        <TextBox x:Name="Pressuretxtbx" HorizontalAlignment="Left" Height="31" Grid.Row="1" Foreground="Green" FontSize="14" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="72" TextAlignment="Right" Margin="120,285,0,0" Grid.Column="1" />
+        <TextBox x:Name="Pressuretxtbx" HorizontalAlignment="Left" Height="31" Grid.Row="1" Foreground="Green" FontSize="14" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="82" TextAlignment="Center" Margin="120,285,0,0" Grid.Column="1" />
 
         <CheckBox x:Name="Below9mcheckbx" Margin="313,83,127,189" Checked="Below9mcheckbx_Checked" Unchecked="Below9mcheckbx_Unchecked" />
 
@@ -154,10 +151,10 @@
 
         <Label Content="L calculée (en m) :" FontSize="14
                " HorizontalAlignment="Left" Margin="3,143,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084" Grid.Column="1"/>
-        <TextBox x:Name="Lcalcultxtbx"  HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="72" TextAlignment="Center" Margin="120,144,0,0" Grid.Column="1" />
+        <TextBox x:Name="Lcalcultxtbx"  HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="82" TextAlignment="Center" Margin="120,144,0,0" Grid.Column="1" />
 
         <Label Content="l calculée (en m) :" FontSize="14" HorizontalAlignment="Left" Margin="5,176,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084" Grid.Column="1"/>
-        <TextBox x:Name="lcalcultxtbx" HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="72" TextAlignment="Center" Margin="120,179,0,0" Grid.Column="1" />
+        <TextBox x:Name="lcalcultxtbx" HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="82" TextAlignment="Center" Margin="120,179,0,0" Grid.Column="1" />
 
         <Label Content="a :" x:Name="albl" FontSize="16" HorizontalAlignment="Left" Margin="151,223,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084"/>
         <TextBox x:Name="atxtbx" KeyDown="ValueEntered_KeyDown"  HorizontalAlignment="Left" Height="31" Grid.Row="1" FontSize="16" TextWrapping="Wrap" PreviewTextInput="Preview_Text_Input" Text="" VerticalAlignment="Top" Width="64" TextAlignment="Center" Margin="182,223,0,0" />
@@ -228,15 +225,14 @@
             <ComboBoxItem Content="Isolant 2 faces"/>
             <ComboBoxItem Content="Isolant 3 faces"/>
         </ComboBox>
-        <Label x:Name="Monolithiqueslbl" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="198" Height="33" Content="Type du composant monolithique :" Margin="29,163,0,0" RenderTransformOrigin="0.409,0.559"/>
+        <Label x:Name="Monolithiqueslbl" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="198" Height="33" Content="Type du composant monolithique :" Margin="24,163,0,0" RenderTransformOrigin="0.409,0.559"/>
 
-        <ComboBox Grid.Column="1" x:Name="GlazingTypemonolithiquescombobx" HorizontalAlignment="Left" SelectionChanged="GlazingTypemonolithiquescombobx_SelectionChanged"  Margin="29,195,0,0" VerticalAlignment="Top" Width="143" Height="32">
+        <ComboBox Grid.Column="1" x:Name="GlazingTypemonolithiquescombobx" HorizontalAlignment="Left" Margin="29,195,0,0" VerticalAlignment="Top" Width="143" Height="32">
             <ComboBoxItem Content="recuit NF EN 572-2 " />
             <ComboBoxItem Content="recuit armé NF EN 572-3" />
             <ComboBoxItem Content="étiré NF EN 572-4"/>
             <ComboBoxItem Content="imprimé NF EN 572-5"/>
             <ComboBoxItem Content="imprimé armé NF EN 572-6"/>
-            <ComboBoxItem Content="imprimé NF EN 572-5"/>
             <ComboBoxItem Content="trempé NF EN 12150 ou NF EN 14179 "/>
             <ComboBoxItem Content="émaillé trempé NF EN 12150"/>
             <ComboBoxItem Content="imprimé trempé NF EN 12150"/>
@@ -253,16 +249,16 @@
             <ComboBoxItem Content="recuit dépoli par grenaillage"/>
             <ComboBoxItem Content="gravé"/>
         </ComboBox>
-        <TextBox x:Name="epaisseurmonolithiquetxtbx"  HorizontalAlignment="Left" Height="30" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Right" Margin="212,196,0,0" Grid.Column="1" />
+        <TextBox x:Name="epaisseurmonolithiquetxtbx"  PreviewTextInput="Preview_Text_Input" HorizontalAlignment="Left" Height="30" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Right" Margin="212,196,0,0" Grid.Column="1" />
 
 
-        <Label Content="Rapport L/l :" FontSize="14" HorizontalAlignment="Left" Margin="5,211,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084" Grid.Column="1"/>
-        <TextBox x:Name="RapportLsurltxtbx"  HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="72" TextAlignment="Center" Margin="120,214,0,0" Grid.Column="1" />
+        <Label Content="Rapport l/L :" FontSize="14" HorizontalAlignment="Left" Margin="5,211,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084" Grid.Column="1"/>
+        <TextBox x:Name="RapportlsurLtxtbx"  HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="82" TextAlignment="Center" Margin="120,214,0,0" Grid.Column="1" />
 
         <Label Content="Surface (S) :" FontSize="14" HorizontalAlignment="Left" Margin="5,245,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084" Grid.Column="1"/>
-        <TextBox x:Name="Surfacetxtbx"  HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="72" TextAlignment="Center" Margin="120,249,0,0" Grid.Column="1" />
+        <TextBox x:Name="Surfacetxtbx"  HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="82" TextAlignment="Center" Margin="120,249,0,0" Grid.Column="1" />
 
-        <ListBox x:Name="feuilletelbx" FontSize="9" Grid.Column="1" Margin="29,163,224,37" SelectionChanged="feuilletelbx_SelectionChanged" >
+        <ListBox x:Name="feuilletelbx" FontSize="9" Grid.Column="1" Visibility="Visible" Margin="29,163,224,37" SelectionChanged="feuilletelbx_SelectionChanged" >
             <ListBoxItem Content="feuilleté de sécurité NF en ISO 12543-2 à deux composants"/>
             <ListBoxItem Content="feuilleté de sécurité NF en ISO 12543-2 à trois composants"/>
             <ListBoxItem Content="feuilleté de sécurité NF en ISO 12543-2 à quatre composants ou plus"/>
@@ -270,13 +266,12 @@
             <ListBoxItem Content="feuilleté NF en ISO 12543-3 à trois composants ou plus"/>
         </ListBox>
 
-        <ComboBox Grid.Column="1" x:Name="GlazingTypeFeuilleté1" FontSize="10" HorizontalAlignment="Left" SelectionChanged="GlazingTypemonolithiquescombobx_SelectionChanged"  Margin="29,289,0,0" VerticalAlignment="Top" Width="157" Height="34">
+        <ComboBox Grid.Column="1" x:Name="GlazingTypeFeuilleté1" FontSize="10" HorizontalAlignment="Left" Margin="29,287,0,0" VerticalAlignment="Top" Width="157" Height="38">
             <ComboBoxItem Content="recuit NF EN 572-2 " />
             <ComboBoxItem Content="recuit armé NF EN 572-3" />
             <ComboBoxItem Content="étiré NF EN 572-4"/>
             <ComboBoxItem Content="imprimé NF EN 572-5"/>
             <ComboBoxItem Content="imprimé armé NF EN 572-6"/>
-            <ComboBoxItem Content="imprimé NF EN 572-5"/>
             <ComboBoxItem Content="trempé NF EN 12150 ou NF EN 14179 "/>
             <ComboBoxItem Content="émaillé trempé NF EN 12150"/>
             <ComboBoxItem Content="imprimé trempé NF EN 12150"/>
@@ -293,16 +288,15 @@
             <ComboBoxItem Content="recuit dépoli par grenaillage"/>
             <ComboBoxItem Content="gravé"/>
         </ComboBox>
-        <TextBox x:Name="epaisseurfeuilleté1txtbx"  HorizontalAlignment="Left" Height="34" FontSize="13" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Center" Margin="212,289,0,0" Grid.Column="1" />
+        <TextBox x:Name="epaisseurfeuilleté1txtbx" PreviewTextInput="Preview_Text_Input"  HorizontalAlignment="Left" Height="38" FontSize="13" TextWrapping="Wrap" VerticalAlignment="Top" Width="52" TextAlignment="Center" Margin="212,287,0,0" Grid.Column="1" />
 
 
-        <ComboBox Grid.Column="1" x:Name="GlazingTypeFeuilleté2" FontSize="10" HorizontalAlignment="Left" SelectionChanged="GlazingTypemonolithiquescombobx_SelectionChanged"  Margin="29,6,0,0" VerticalAlignment="Top" Width="157" Height="16" Grid.Row="1">
+        <ComboBox Grid.Column="1" x:Name="GlazingTypeFeuilleté2" FontSize="10" HorizontalAlignment="Left" Margin="29,6,0,0" VerticalAlignment="Top" Width="157" Height="16" Grid.Row="1">
             <ComboBoxItem Content="recuit NF EN 572-2 " />
             <ComboBoxItem Content="recuit armé NF EN 572-3" />
             <ComboBoxItem Content="étiré NF EN 572-4"/>
             <ComboBoxItem Content="imprimé NF EN 572-5"/>
             <ComboBoxItem Content="imprimé armé NF EN 572-6"/>
-            <ComboBoxItem Content="imprimé NF EN 572-5"/>
             <ComboBoxItem Content="trempé NF EN 12150 ou NF EN 14179 "/>
             <ComboBoxItem Content="émaillé trempé NF EN 12150"/>
             <ComboBoxItem Content="imprimé trempé NF EN 12150"/>
@@ -319,16 +313,15 @@
             <ComboBoxItem Content="recuit dépoli par grenaillage"/>
             <ComboBoxItem Content="gravé"/>
         </ComboBox>
-        <TextBox x:Name="epaisseurfeuilleté2txtbx"  HorizontalAlignment="Left" Height="26" FontSize="13" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Center" Margin="212,6,0,0" Grid.Column="1" Grid.Row="1" />
+        <TextBox x:Name="epaisseurfeuilleté2txtbx"   PreviewTextInput="Preview_Text_Input" HorizontalAlignment="Left" Height="26" FontSize="13" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Center" Margin="212,6,0,0" Grid.Column="1" Grid.Row="1" />
 
 
-        <ComboBox Grid.Column="1" x:Name="GlazingTypeFeuilleté3" FontSize="10" HorizontalAlignment="Left" SelectionChanged="GlazingTypemonolithiquescombobx_SelectionChanged"  Margin="29,38,0,0" VerticalAlignment="Top" Width="157" Height="16" Grid.Row="1">
+        <ComboBox Grid.Column="1" x:Name="GlazingTypeFeuilleté3" FontSize="10" HorizontalAlignment="Left" Margin="29,38,0,0" VerticalAlignment="Top" Width="157" Height="16" Grid.Row="1">
             <ComboBoxItem Content="recuit NF EN 572-2 " />
             <ComboBoxItem Content="recuit armé NF EN 572-3" />
             <ComboBoxItem Content="étiré NF EN 572-4"/>
             <ComboBoxItem Content="imprimé NF EN 572-5"/>
             <ComboBoxItem Content="imprimé armé NF EN 572-6"/>
-            <ComboBoxItem Content="imprimé NF EN 572-5"/>
             <ComboBoxItem Content="trempé NF EN 12150 ou NF EN 14179 "/>
             <ComboBoxItem Content="émaillé trempé NF EN 12150"/>
             <ComboBoxItem Content="imprimé trempé NF EN 12150"/>
@@ -345,16 +338,15 @@
             <ComboBoxItem Content="recuit dépoli par grenaillage"/>
             <ComboBoxItem Content="gravé"/>
         </ComboBox>
-        <TextBox x:Name="epaisseurfeuilleté3txtbx"  HorizontalAlignment="Left" Height="26" FontSize="13" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Center" Margin="212,38,0,0" Grid.Column="1" Grid.Row="1" />
+        <TextBox x:Name="epaisseurfeuilleté3txtbx"  PreviewTextInput="Preview_Text_Input" HorizontalAlignment="Left" Height="26" FontSize="13" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Center" Margin="212,38,0,0" Grid.Column="1" Grid.Row="1" />
 
 
-        <ComboBox Grid.Column="1" x:Name="GlazingTypeFeuilleté4" FontSize="10" HorizontalAlignment="Left" SelectionChanged="GlazingTypemonolithiquescombobx_SelectionChanged"  Margin="29,70,0,0" VerticalAlignment="Top" Width="157" Height="16" Grid.Row="1">
+        <ComboBox Grid.Column="1" x:Name="GlazingTypeFeuilleté4" FontSize="10" HorizontalAlignment="Left"   Margin="29,70,0,0" VerticalAlignment="Top" Width="157" Height="16" Grid.Row="1">
             <ComboBoxItem Content="recuit NF EN 572-2 " />
             <ComboBoxItem Content="recuit armé NF EN 572-3" />
             <ComboBoxItem Content="étiré NF EN 572-4"/>
             <ComboBoxItem Content="imprimé NF EN 572-5"/>
             <ComboBoxItem Content="imprimé armé NF EN 572-6"/>
-            <ComboBoxItem Content="imprimé NF EN 572-5"/>
             <ComboBoxItem Content="trempé NF EN 12150 ou NF EN 14179 "/>
             <ComboBoxItem Content="émaillé trempé NF EN 12150"/>
             <ComboBoxItem Content="imprimé trempé NF EN 12150"/>
@@ -371,7 +363,7 @@
             <ComboBoxItem Content="recuit dépoli par grenaillage"/>
             <ComboBoxItem Content="gravé"/>
         </ComboBox>
-        <TextBox x:Name="epaisseurfeuilleté4txtbx"  HorizontalAlignment="Left" Height="26" FontSize="13" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Center" Margin="212,70,0,0" Grid.Column="1" Grid.Row="1" />
+        <TextBox x:Name="epaisseurfeuilleté4txtbx"  PreviewTextInput="Preview_Text_Input" HorizontalAlignment="Left" Height="26" FontSize="13" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Center" Margin="212,70,0,0" Grid.Column="1" Grid.Row="1" />
 
         <ComboBox x:Name="isolant2facescombobx" SelectionChanged="isolant2facescombobx_SelectionChanged" Margin="29,163,0,0" VerticalAlignment="Top" Width="143" Height="32" HorizontalAlignment="Left" Grid.Column="1">
             <ComboBoxItem Content="Double Monolithiques"/>
@@ -400,6 +392,18 @@
         </Button>
 
         <Button Grid.Column="1" x:Name="thicknessCalculatebtn" Content="Calcul de eR et eF" HorizontalAlignment="Left" Margin="433,102,0,0" Grid.Row="1" VerticalAlignment="Top" Click="thicknessCalculatebtn_Click"/>
+
+        <ComboBox x:Name="isolant3facescombobx" SelectionChanged="isolant3facescombobx_SelectionChanged" Margin="29,163,0,0" VerticalAlignment="Top" Width="143" Height="32" HorizontalAlignment="Left" Grid.Column="1">
+            <ComboBoxItem Content="Triple Monolithiques"/>
+            <ComboBoxItem Content="Double Monolithique + Feuilleté"/>
+            <ComboBoxItem Content="Monolithique + Double Feuilletés"/>
+            <ComboBoxItem Content="Triple Feuilletés"/>
+
+        </ComboBox>
+        <Label Content="eR calculée (en mm) :" FontSize="14" HorizontalAlignment="Left" Margin="335,178,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084" Grid.Column="1"/>
+        <TextBox x:Name="eRtxtbox"  HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Right" Margin="480,179,0,0" Grid.Column="1" />
+        <TextBox x:Name="eFtxtbox"  HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Right" Margin="480,214,0,0" Grid.Column="1" />
+        <Label Content="eF calculée (en mm) :" FontSize="14" HorizontalAlignment="Left" Margin="335,212,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084" Grid.Column="1"/>
 
 
     </Grid>

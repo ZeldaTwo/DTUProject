@@ -46,15 +46,24 @@ namespace GlassMetalProj
         public double[] equivalencefactor2 { get; set; }
         public double[] equivalencefactor3 { get; set; }
 
-        public double epsilon1;
-        public double epsilon2;
-        public double epsilon3;
+        
+
+        //Only 2 layers on the IsolantGlazing
+        public int[] GlazingTypeFromLayersIndexes = new int[4];
+        public double[] thicknessfromeachLayerfeuillete = new double[4];
+        public int FeuilleteIndex = -1;
+        public int GlazingTypeMonolithiqueIndex = -1;
+        public double thicknessformonolithiques = 0;
+
+        //For 3 layers on the isolant glazing
+        public int[] GlazingTypeFromLayersIndexes2 = new int[4];
+        public double[] thicknessfromeachLayerfeuillete2 = new double[4];
+        public int FeuilleteIndex2 = -1;
+        public int GlazingTypeMonolithiqueIndex2 = -1;
+        public double thicknessformonolithiques2 = 0;
 
         //equals to 1 every time expect one time
         public double c = 1.0;
-
-        //e or ep.
-        public string thickness;
 
         public FilledInfos(string pathPressure,string pathFactors) 
         {
@@ -152,7 +161,6 @@ namespace GlassMetalProj
             }
             else Pressure = 600;
         }
-
         public void FindS1andS2(int indexS,double mu, double Ce, double Ct) 
         {
             if (Altitude <= 200) 
@@ -165,7 +173,7 @@ namespace GlassMetalProj
                 double deltaS;
                 if (Altitude > 200 && Altitude <= 500)
                     deltaS = Altitude - 200;
-                else if (Altitude > 500 && Altitude <= 1000) ;
+                else if (Altitude > 500 && Altitude <= 1000) { }
             }
             double Sad = SnowChargeAD[indexS];
             S2 = Sad * mu + Ce * Ct;
@@ -203,7 +211,7 @@ namespace GlassMetalProj
                 equivalencefactor3[10] = 0.61;
                 equivalencefactor3[11] = 1.0;
                 equivalencefactor3[12] = 1.0;
-                equivalencefactor3[13] = 0.6;
+                equivalencefactor3[13] = 0.61;
                 equivalencefactor3[14] = 1.0;
                 equivalencefactor3[15] = 0.55;
                 equivalencefactor3[16] = 1.0;
@@ -470,27 +478,5 @@ namespace GlassMetalProj
             }
         }
 
-        private void FindEpsilon(int type, int index, int[] indexesforcase3) 
-        {
-            switch (type)
-            {
-                case 0:
-                    epsilon1 = equivalencefactor1[index];
-                    break;
-                case 1:
-                    epsilon2 = equivalencefactor2[index];
-                    break;
-                case 2:
-                    epsilon3 = equivalencefactor3[indexesforcase3[0]];
-                    for (int i = 1; i < indexesforcase3.Length; i++)
-                    {
-                        if (epsilon3 < equivalencefactor3[indexesforcase3[i]])
-                            epsilon3 = equivalencefactor3[indexesforcase3[i]];
-                    }
-                    break;
-                default:
-                    throw new Exception("Error in type value");
-            }
-        }
     }
 }
