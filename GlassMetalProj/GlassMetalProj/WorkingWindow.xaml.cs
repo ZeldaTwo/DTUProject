@@ -1,4 +1,5 @@
-﻿using ControlzEx.Theming;
+﻿using ControlzEx.Standard;
+using ControlzEx.Theming;
 using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,7 @@ namespace GlassMetalProj
         private double d = 0;
 
         int IndexInfeuilette = 1;
+
         public WorkingWindow()
         {
             InitializeComponent();
@@ -63,6 +65,31 @@ namespace GlassMetalProj
             Surfacetxtbx.IsEnabled = false;
             eRtxtbox.IsEnabled = false;
             eFtxtbox.IsEnabled = false;
+            flèchetxtbox.IsEnabled = false;
+            alphatxtbx.IsEnabled = false;
+
+            //For Avalanche
+            PressionAvalanchelbl.Visibility = Visibility.Hidden;
+            PressionAvalanchetxtbx.Visibility = Visibility.Hidden;
+
+            //For Inclined
+            Altitudelbl.Visibility = Visibility.Hidden;
+            Altitudetxtbx.Visibility = Visibility.Hidden;
+            HelpButtonCoeff.Visibility = Visibility.Hidden;
+            coeffcombobx.Visibility = Visibility.Hidden;
+            Coefflbl.Visibility = Visibility.Hidden;
+
+            CoeffCetxtbx.Visibility = Visibility.Hidden;
+            CoeffCttxtbx.Visibility = Visibility.Hidden;
+            Coeff_Ce_Ctlbl.Visibility = Visibility.Hidden;
+            Coeff_Ce_Ctlbl2.Visibility = Visibility.Hidden;
+
+            SnowZonecombobx.Visibility = Visibility.Hidden;
+            SnowZonelbl.Visibility = Visibility.Hidden;
+            HelpButtonSnowZone.Visibility = Visibility.Hidden;
+
+            eptxtbx.Visibility = Visibility.Hidden;
+            eplbl.Visibility = Visibility.Hidden;
 
             //Disappearing Label and CheckBox for "Grandcôté or petit côté"
             BordLibrelbl.Visibility = Visibility.Hidden;
@@ -73,6 +100,8 @@ namespace GlassMetalProj
             PositionDuMaitienlbl.Visibility = Visibility.Hidden;
             MaintienMiddlecheckbx.Visibility = Visibility.Hidden;
             DoubleMaintienscheckbx.Visibility = Visibility.Hidden;
+            DistanceMaintienslbl.Visibility = Visibility.Hidden;
+            DistanceMaintienstxtbx.Visibility = Visibility.Hidden;
 
             //Disappapearing Labels and CheckBox for glazingtype
             Monolithiqueslbl.Visibility = Visibility.Hidden;
@@ -120,6 +149,16 @@ namespace GlassMetalProj
                     helperWindow.DisplayImage("Images/shapes.png");
                     helperWindow.Show();
                     break;
+                case "HelpButtonCoeff":
+                    helperWindow.DisplayImage("Images/coeffmicro.png");
+                    helperWindow.Show();
+                    break;
+                case "HelpButtonSnowZone":
+                    helperWindow.DisplayImage("Images/SnowZone.png");
+                    helperWindow.Show();
+                    break;
+
+                    
 
 
             }
@@ -172,6 +211,7 @@ namespace GlassMetalProj
             Windlbl.Visibility = Visibility.Visible;
             Regioncbx.Visibility = Visibility.Visible;
             HelpButtonRegion.Visibility = Visibility.Visible;
+            FilledInfos.inFrance = true;
         }
 
         private void OutreMercheckbx_Checked(object sender, RoutedEventArgs e)
@@ -184,6 +224,7 @@ namespace GlassMetalProj
                 HelpButtonRegion.Visibility = Visibility.Hidden;
             }
             Windlbl.Visibility= Visibility.Visible;
+            FilledInfos.inFrance = false;
             RegionOutreMercbx.Visibility= Visibility.Visible;
         }
 
@@ -217,11 +258,50 @@ namespace GlassMetalProj
 
         private void Calculatepressure_Click(object sender, RoutedEventArgs e)
         {
-            if (!CheckEverythingIsChecked())
-                MessageBox.Show("Remplissez toutes les informations!");
-            else 
+            if (ManualPressuretxtbx.Text != string.Empty)
             {
-                FilledInfos.CalculatePressure();
+                double pressure = 0;
+                if (!Double.TryParse(ManualPressuretxtbx.Text, out pressure))
+                {
+                    MessageBox.Show("La pression que vous avez rentré n'est pas correcte");
+                }
+                else 
+                {
+                    MessageBox.Show("La pression manuelle est prioritaire");
+                    Pressuretxtbx.Text = ManualPressuretxtbx.Text;
+                    FilledInfos.Pressure = pressure;
+                }
+                
+            }
+            else if (!CheckEverythingIsChecked())
+                MessageBox.Show("Remplissez toutes les informations, ou remplissez à la main votre pression en bas à droite, et vérifiez les valeurs entrées.");
+            else
+            {  
+                double ep = 0;
+                int indexS = 0;
+                double mu = 0;
+                double Ce = 0;
+                double Ct = 0;
+                bool Av = false;
+                if (Inclinedcheckbx.IsChecked == true) 
+                {
+                    ep = Double.Parse(eptxtbx.Text);
+                    indexS = SnowZonecombobx.SelectedIndex;
+
+                    ComboBoxItem cbx = coeffcombobx.SelectedItem as ComboBoxItem;
+                    mu = Double.Parse(cbx.Content.ToString());
+
+                    Ce = Double.Parse(CoeffCetxtbx.Text);
+                    Ct = Double.Parse(CoeffCttxtbx.Text);
+                    Av = Avalanche_checkbx.IsChecked == true;
+                }
+                double PressureAv = 0;
+                if (Avalanche_checkbx.IsChecked == true)
+                {
+                    PressureAv = Double.Parse(PressionAvalanchetxtbx.Text);
+                }
+
+                FilledInfos.CalculatePressure(ep,indexS,mu,Ce,Ct,Av,PressureAv);
                 Pressuretxtbx.Text = FilledInfos.Pressure + "";
             }
             
@@ -234,6 +314,28 @@ namespace GlassMetalProj
                 Verticalcheckbx.IsChecked = false;
             }
             FilledInfos.inclined = true;
+            //Infos to display
+            Altitudetxtbx.Visibility = Visibility.Visible;
+            Altitudelbl.Visibility = Visibility.Visible;
+            Coefflbl.Visibility = Visibility.Visible;
+            coeffcombobx.Visibility = Visibility.Visible;
+            HelpButtonCoeff.Visibility = Visibility.Visible;
+
+            Coeff_Ce_Ctlbl.Visibility = Visibility.Visible;
+            Coeff_Ce_Ctlbl2.Visibility = Visibility.Visible;
+            CoeffCetxtbx.Visibility = Visibility.Visible;
+            CoeffCttxtbx.Visibility = Visibility.Visible;
+
+            CoeffCetxtbx.Text = "1,0";
+            CoeffCttxtbx.Text = "1,0";
+
+            SnowZonelbl.Visibility = Visibility.Visible;
+            SnowZonecombobx.Visibility = Visibility.Visible;
+            HelpButtonSnowZone.Visibility = Visibility.Visible;
+
+            eptxtbx.Visibility = Visibility.Visible;
+            eplbl.Visibility = Visibility.Visible;
+            
         }
 
         private void Verticalcheckbx_Checked(object sender, RoutedEventArgs e)
@@ -243,6 +345,29 @@ namespace GlassMetalProj
                 Inclinedcheckbx.IsChecked=false;
             }
             FilledInfos.inclined = false;
+
+            //Things to hide
+            Altitudetxtbx.Visibility = Visibility.Hidden;
+            Altitudelbl.Visibility = Visibility.Hidden;
+            Altitudetxtbx.Text = string.Empty;
+            coeffcombobx.Visibility = Visibility.Hidden;
+            Coefflbl.Visibility = Visibility.Hidden;
+            HelpButtonCoeff.Visibility = Visibility.Hidden;
+            coeffcombobx.SelectedIndex = -1;
+
+            CoeffCetxtbx.Visibility = Visibility.Hidden;
+            CoeffCttxtbx.Visibility = Visibility.Hidden;
+            Coeff_Ce_Ctlbl.Visibility = Visibility.Hidden;
+            Coeff_Ce_Ctlbl2.Visibility = Visibility.Hidden;
+
+            SnowZonecombobx.Visibility = Visibility.Hidden;
+            SnowZonecombobx.SelectedIndex = -1;
+            SnowZonelbl.Visibility = Visibility.Hidden;
+            HelpButtonSnowZone.Visibility = Visibility.Hidden;
+
+            eptxtbx.Visibility = Visibility.Hidden;
+            eplbl.Visibility = Visibility.Hidden;
+            eptxtbx.Text = string.Empty;
         }
 
         private void Francecheckbx_Unchecked(object sender, RoutedEventArgs e)
@@ -280,10 +405,26 @@ namespace GlassMetalProj
                         if (Regioncbx.SelectedIndex != -1 || RegionOutreMercbx.SelectedIndex != -1) 
                         {
                             if (Inclinedcheckbx.IsChecked == true || Verticalcheckbx.IsChecked == true)
-                            
                             {
-                                if (FieldTypecbx.SelectedIndex != -1)
+                                if (FieldTypecbx.SelectedIndex != -1 && Verticalcheckbx.IsChecked == true)
                                     return true;
+                                else if (FieldTypecbx.SelectedIndex != -1 && Inclinedcheckbx.IsChecked == true) 
+                                {
+                                    if ((Double.TryParse(PressionAvalanchetxtbx.Text, out var value) && Avalanche_checkbx.IsChecked == true) || Avalanche_checkbx.IsChecked == false) 
+                                    {
+                                        if (Double.TryParse(Altitudetxtbx.Text,out var value2)) 
+                                        {
+                                            if (Double.TryParse(eptxtbx.Text,out var value3)) 
+                                            {
+                                                if (Double.TryParse(CoeffCetxtbx.Text,out var value4) && Double.TryParse(CoeffCttxtbx.Text,out var value5)) 
+                                                {
+                                                    if (coeffcombobx.SelectedIndex > -1 && SnowZonecombobx.SelectedIndex > -1)
+                                                        return true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -703,12 +844,15 @@ namespace GlassMetalProj
 
         private void Avalanche_checkbx_Checked(object sender, RoutedEventArgs e)
         {
-            FilledInfos.Avalanche = true;
+            PressionAvalanchelbl.Visibility = Visibility.Visible;
+            PressionAvalanchetxtbx.Visibility = Visibility.Visible;
         }
 
         private void Avalanche_checkbx_Unchecked(object sender, RoutedEventArgs e)
         {
-            FilledInfos.Avalanche = false;
+            PressionAvalanchelbl.Visibility = Visibility.Hidden;
+            PressionAvalanchetxtbx.Visibility = Visibility.Hidden;
+            PressionAvalanchetxtbx.Text = string.Empty;
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
@@ -764,6 +908,11 @@ namespace GlassMetalProj
                 //Visual and Not doable issues
                 if (DoubleMaintienscheckbx.IsChecked == true)
                     DoubleMaintienscheckbx.IsChecked = false;
+
+                DistanceMaintienstxtbx.Visibility = Visibility.Hidden;
+                DistanceMaintienslbl.Visibility = Visibility.Hidden;
+                DistanceMaintienstxtbx.Text = string.Empty;
+
                 if (petitcotelcheckbx.IsChecked == false && grandcotecheckbx.IsChecked == false)
                 {
                     MessageBox.Show("Veuillez d'abord cocher une des cases ci-dessus");
@@ -783,6 +932,8 @@ namespace GlassMetalProj
                 //Visual and Not doable issues
                 if (MaintienMiddlecheckbx.IsChecked == true)
                     MaintienMiddlecheckbx.IsChecked = false;
+                DistanceMaintienstxtbx.Visibility = Visibility.Visible;
+                DistanceMaintienslbl.Visibility = Visibility.Visible;
                 if (petitcotelcheckbx.IsChecked == false && grandcotecheckbx.IsChecked == false)
                 {
                     MessageBox.Show("Veuillez d'abord cocher une des cases ci-dessus");
@@ -820,6 +971,9 @@ namespace GlassMetalProj
                 PositionDuMaitienlbl.Visibility = Visibility.Hidden;
                 DoubleMaintienscheckbx.IsChecked = false;
                 MaintienMiddlecheckbx.IsChecked = false;
+                DistanceMaintienstxtbx.Visibility = Visibility.Hidden;
+                DistanceMaintienslbl.Visibility = Visibility.Hidden;
+                DistanceMaintienstxtbx.Text = string.Empty;
 
                 if (GlazingSupport.SelectedIndex == 3) 
                 {
@@ -842,6 +996,9 @@ namespace GlassMetalProj
                 PositionDuMaitienlbl.Visibility = Visibility.Hidden;
                 DoubleMaintienscheckbx.IsChecked = false;
                 MaintienMiddlecheckbx.IsChecked = false;
+                DistanceMaintienslbl.Visibility = Visibility.Hidden;
+                DistanceMaintienstxtbx.Visibility= Visibility.Hidden;
+                DistanceMaintienstxtbx.Text = string.Empty;
 
                 mathsHelper.e1Calculatation(selectedstring.Content.ToString(), -1, -1);
                 e1txtBox.Text = mathsHelper.e1.ToString();
@@ -1011,22 +1168,52 @@ namespace GlassMetalProj
                     MessageBox.Show("Veuillez saisir un type de glace");
                 else 
                 {
-                    switch (GlazingTypecombobx.SelectedIndex) 
+                    string input = "";
+                    string input2 = "";
+                    string input3 = "";
+                    switch (GlazingTypecombobx.SelectedIndex)
                     {
                         //Case it's only 1 Monolithique
                         case 0:
                             mathsHelper.eRCalculation(0, thickness, null, GlazingTypemonolithiquescombobx.SelectedIndex, null, null);
                             mathsHelper.eFCalculation(0, thickness, null, null);
+                            if (GlazingTypemonolithiquescombobx.SelectedIndex != -1)
+                            {
+                                ComboBoxItem item = GlazingTypemonolithiquescombobx.SelectedItem as ComboBoxItem;
+                                input = item.Content.ToString();
+                            }
+                            SummaryGlazinglbl.Content = mathsHelper.SummaryThickness(0, input, input2, input3, thickness, null);
                             break;
                         //Case where we have 2 Monolithiques
                         case 2:
-                            mathsHelper.eRCalculation(2, thickness, null,GlazingTypemonolithiquescombobx.SelectedIndex,null, null);
+                            mathsHelper.eRCalculation(2, thickness, null, GlazingTypemonolithiquescombobx.SelectedIndex, null, null);
                             mathsHelper.eFCalculation(2, thickness, null, null);
+
+                            ComboBoxItem cbxitem = GlazingTypemonolithiquescombobx.Items[FilledInfos.GlazingTypeMonolithiqueIndex] as ComboBoxItem;
+                            input = cbxitem.Content.ToString();
+
+                            ComboBoxItem cbxitem2 = GlazingTypemonolithiquescombobx.SelectedItem as ComboBoxItem;
+                            input2 = cbxitem2.Content.ToString();
+
+                            SummaryGlazinglbl.Content = mathsHelper.SummaryThickness(2, input, input2, input3, thickness, null);
+
                             break;
                         //Case where we have 3 Monolithiques
                         case 3:
                             mathsHelper.eRCalculation(3, thickness, null, GlazingTypemonolithiquescombobx.SelectedIndex, null, null);
                             mathsHelper.eFCalculation(3, thickness, null, null);
+
+                            ComboBoxItem cbxitem3 = GlazingTypemonolithiquescombobx.Items[FilledInfos.GlazingTypeMonolithiqueIndex] as ComboBoxItem;
+                            input = cbxitem3.Content.ToString();
+
+                            ComboBoxItem cbxitem4 = GlazingTypemonolithiquescombobx.Items[FilledInfos.GlazingTypeMonolithiqueIndex2] as ComboBoxItem;
+                            input2 = cbxitem4.Content.ToString();
+
+                            ComboBoxItem cbxitem5 = GlazingTypemonolithiquescombobx.SelectedItem as ComboBoxItem;
+                            input3 = cbxitem5.Content.ToString();
+
+                            SummaryGlazinglbl.Content = mathsHelper.SummaryThickness(3, input, input2, input3, thickness, null);
+
                             break;
                     }
                     if (!mathsHelper.eRisValid()) 
@@ -1038,6 +1225,44 @@ namespace GlassMetalProj
                     {
                         eRtxtbox.Text = mathsHelper.eR.ToString();
                         eFtxtbox.Text = mathsHelper.eF.ToString();
+                        double b = 0;
+                        if (grandcotecheckbx.IsChecked == true)
+                            b = FilledInfos.L;
+                        else if (petitcotelcheckbx.IsChecked == true)
+                            b = FilledInfos.l;
+                        else
+                            b = FilledInfos.l;
+
+                        bool doubleGlazing = (GlazingTypecombobx.SelectedIndex == 2 || GlazingTypecombobx.SelectedIndex == 3);
+
+                        double second_b = 0;
+                        if (GlazingSupport.SelectedIndex == 3)
+                        {
+                            if (DoubleMaintienscheckbx.IsChecked == true)
+                            {
+                                if (!Double.TryParse(DistanceMaintienstxtbx.Text, out second_b))
+                                    MessageBox.Show("Veuillez rentrez des informations correctes pour la distance entre maintiens");
+                                if (second_b > b)
+                                    MessageBox.Show("La distance entre les maintiens ne peut être supérieure à la longueur du bord libre");
+                            }
+                            else if (MaintienMiddlecheckbx.IsChecked == true)
+                            {
+                                second_b = b / 2;
+                            }
+                            else
+                            {
+                                MessageBox.Show("Veuillez cocher toutes les cases pour les informations concernant l'appui du vitrage");
+                            }
+                        }
+
+                        if (!mathsHelper.fCalculation(GlazingSupport.SelectedIndex, doubleGlazing, b, second_b))
+                            MessageBox.Show("La flèche ne respecte pas les conditions nécessaires, veuillez ajustez les valeurs de eF ou les dimensions ainsi que l'épaisseur pour que la flèche soit admissible");
+                        else 
+                        {
+                            MessageBox.Show("La flèche et eR sont valides, le vitrage convient");
+                            alphatxtbx.Text = mathsHelper.alpha.ToString();
+                            flèchetxtbox.Text = mathsHelper.f.ToString();
+                        }
                     }
                 }
             }
@@ -1074,6 +1299,10 @@ namespace GlassMetalProj
                     indexesForGlazingMono[1] = GlazingTypeFeuilleté2.SelectedIndex;
                     indexesForGlazingMono[2] = GlazingTypeFeuilleté3.SelectedIndex;
                     indexesForGlazingMono[3] = GlazingTypeFeuilleté4.SelectedIndex;
+
+                    string input = "";
+                    string input2 = "";
+                    string input3 = "";
                     switch (GlazingTypecombobx.SelectedIndex) 
                     {
                         //It's 1 Feuilleté
@@ -1081,6 +1310,7 @@ namespace GlassMetalProj
                             indexesEpsilon2[0] = feuilletelbx.SelectedIndex;
                             mathsHelper.eRCalculation(1, 0, thicknesses, -1, indexesForGlazingMono,indexesEpsilon2);
                             mathsHelper.eFCalculation(1, 0, thicknesses, indexesEpsilon2);
+                            SummaryGlazinglbl.Content = mathsHelper.SummaryThickness(1, input, input2, input3, 0, thicknesses);
                             break;
                         //It's 1 monolithique + 1 feuilleté or it's double feuilleté
                         case 2:
@@ -1091,8 +1321,17 @@ namespace GlassMetalProj
                                 indexesEpsilon2[0] = FilledInfos.FeuilleteIndex;
                                 indexesEpsilon2[1] = feuilletelbx.SelectedIndex;
                             }
-                                mathsHelper.eRCalculation(2, 0, thicknesses, -1, indexesForGlazingMono, indexesEpsilon2);
-                                mathsHelper.eFCalculation(2, 0, thicknesses, indexesEpsilon2);
+                            //M + F
+                            if (FilledInfos.thicknessformonolithiques > 0) 
+                            {
+                                ComboBoxItem item = GlazingTypemonolithiquescombobx.SelectedItem as ComboBoxItem;
+                                input = item.Content.ToString();
+                            }
+
+                            mathsHelper.eRCalculation(2, 0, thicknesses, -1, indexesForGlazingMono, indexesEpsilon2);
+                            mathsHelper.eFCalculation(2, 0, thicknesses, indexesEpsilon2);
+                            SummaryGlazinglbl.Content = mathsHelper.SummaryThickness(2, input, input2, input3, 0, thicknesses);
+
                             break;
                         //it's 2 monolithiques + 1 feuilleté, or 1 monolithique
                         case 3:
@@ -1109,9 +1348,20 @@ namespace GlassMetalProj
                                 indexesEpsilon2[1] = FilledInfos.FeuilleteIndex2;
                                 indexesEpsilon2[2] = feuilletelbx.SelectedIndex;
                             }
+                            if (FilledInfos.thicknessformonolithiques > 0) 
+                            {
+                                ComboBoxItem item = GlazingTypemonolithiquescombobx.Items[FilledInfos.GlazingTypeMonolithiqueIndex] as ComboBoxItem;
+                                input = item.Content.ToString();
+                            }
+                            if (FilledInfos.thicknessformonolithiques2 > 0) 
+                            {
+                                ComboBoxItem item = GlazingTypemonolithiquescombobx.Items[FilledInfos.GlazingTypeMonolithiqueIndex2] as ComboBoxItem;
+                                input2 = item.Content.ToString();
+                            }
 
                             mathsHelper.eRCalculation(3, 0, thicknesses, -1, indexesForGlazingMono, indexesEpsilon2);
                             mathsHelper.eFCalculation(3, 0, thicknesses, indexesEpsilon2);
+                            SummaryGlazinglbl.Content = mathsHelper.SummaryThickness(3, input, input2, input3, 0, thicknesses);
                             break;
                     }
                     if (!mathsHelper.eRisValid())
@@ -1123,6 +1373,43 @@ namespace GlassMetalProj
                     {
                         eRtxtbox.Text = mathsHelper.eR.ToString();
                         eFtxtbox.Text = mathsHelper.eF.ToString();
+
+                        double b = 0;
+                        if (grandcotecheckbx.IsChecked == true)
+                            b = FilledInfos.L;
+                        else if (petitcotelcheckbx.IsChecked == true)
+                            b = FilledInfos.l;
+                        else 
+                            b = FilledInfos.l;
+
+                        bool doubleGlazing = (GlazingTypecombobx.SelectedIndex == 2 || GlazingTypecombobx.SelectedIndex == 3);
+
+                        double second_b = 0;
+                        if (GlazingSupport.SelectedIndex == 3) 
+                        {
+                            if (DoubleMaintienscheckbx.IsChecked == true) 
+                            {
+                                if (!Double.TryParse(DistanceMaintienstxtbx.Text, out second_b))
+                                    MessageBox.Show("Veuillez rentrez des informations correctes pour la distance entre maintiens");
+                            }
+                            else if (MaintienMiddlecheckbx.IsChecked == true) 
+                            {
+                                second_b = b / 2;
+                            }
+                            else 
+                            {
+                                MessageBox.Show("Veuillez cocher toutes les cases pour les informations concernant l'appui du vitrage");
+                            }
+                        }
+
+                        if (!mathsHelper.fCalculation(GlazingSupport.SelectedIndex, doubleGlazing, b, second_b))
+                            MessageBox.Show("La flèche ne respecte pas les conditions nécessaires, veuillez ajustez les valeurs de eF ou les dimensions ainsi que l'épaisseur pour que la flèche soit admissible");
+                        else
+                        {
+                            MessageBox.Show("La flèche et eR sont valides, le vitrage convient");
+                            alphatxtbx.Text = mathsHelper.alpha.ToString();
+                            flèchetxtbox.Text = mathsHelper.f.ToString();
+                        }
                     }
                 }
 
@@ -1755,5 +2042,6 @@ namespace GlassMetalProj
 
             }
         }
+
     }
 }

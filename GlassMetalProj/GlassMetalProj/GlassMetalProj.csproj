@@ -147,5 +147,11 @@
   <ItemGroup>
     <Resource Include="Images\shapes.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\coeffmicro.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\SnowZone.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -17,6 +17,10 @@ namespace GlassMetalProj
         public double eR = 0;
         public double eF = 0;
 
+        public double f = 0;
+        public double f2 = 0;
+
+        public double alpha = 0;
 
 
         FilledInfos fi;
@@ -588,7 +592,6 @@ namespace GlassMetalProj
                     //M + 2F
                     else if (thicknesses != null && fi.GlazingTypeMonolithiqueIndex > -1) 
                     {
-                        eF = fi.thicknessformonolithiques;
                         double second_part_ef = 0;
                         double third_part_ef = 0;
 
@@ -607,7 +610,7 @@ namespace GlassMetalProj
                             i++;
                         }
                         third_part_ef /= fi.equivalencefactor2[indexEpsilon2[1]];
-                        eF += (second_part_ef + third_part_ef) / fi.equivalencefactor3[1];
+                        eF = (fi.thicknessformonolithiques + second_part_ef + third_part_ef) / fi.equivalencefactor1[1];
 
                         //check if ef is less than the thicknesses
                         if (eF < fi.thicknessformonolithiques)
@@ -696,5 +699,166 @@ namespace GlassMetalProj
             }
             eF = Math.Round(eF, 2);
         }
+
+        public bool fCalculation(int type,bool doubleGlazing, double b, double second_b) 
+        {
+            f = 0;
+            f2 = 0;
+            alpha = fi.findAlpha(type,b) ;
+            
+            f = alpha * (fi.Pressure / 1.5) * (Math.Pow(b, 4) / Math.Pow(eF, 3));
+
+            //Maintien 4 côtés
+            if (type == 0)
+            {
+                //b is in meter, so it has to be in milimeter
+                b *= 1000;
+                return (f <= (b / 60) && f <= 30);
+            }
+
+            //Maintien 3 côtés + Mantiens 2 côtés 
+            else if (type == 1 || type == 2)
+            {
+                if (!doubleGlazing)
+                {
+                    return (f <= (b * 10) && f <= 50);
+                }
+                else
+                {
+                    return (f <= (b * 6.67) && f <= 50);
+                }
+            }
+
+            //Maintien 2 côtés + ponctuels
+            else if (type == 3)
+            {
+                b *= 1000;
+                if (f > (b / 60) || f > 30)
+                    return false;
+                else
+                {
+                    
+                    f2 = 2.1143 * (fi.Pressure / 1.5) * (Math.Pow(second_b, 4) / Math.Pow(eF, 3));
+                    if (!doubleGlazing)
+                        return (f2 <= (second_b * 10) && f2 <= 50);
+                    else
+                    {
+                        return (f2 <= (second_b * 6.67) && f2 <= 50);
+                    }
+
+                }
+
+            }
+            else
+                throw new Exception("Error with the type of maintiens");
+        }
+
+        public string SummaryThickness(int type,string input,string input2,string input3, double thickness, double[] thicknesses)
+        {
+            string res = "";
+            switch (type)
+            {
+                case 0:
+                    return thickness + " " + WithoutNF(input);
+                case 1:
+                    int i = 0;
+                    while(i < thicknesses.Length && thicknesses[i] > 0) 
+                    {
+                        res += thicknesses[i];
+                        i++;
+                    }
+                    res += ".x";
+                    break;
+                //Isolant 2 faces
+                case 2:
+                    //1st layer
+                    if (fi.thicknessformonolithiques > 0)
+                        res += fi.thicknessformonolithiques + " " + WithoutNF(input);
+                    else 
+                    {
+                        i = 0;
+                        while( i < fi.thicknessfromeachLayerfeuillete.Length && fi.thicknessfromeachLayerfeuillete[i] > 0) 
+                        {
+                            res += fi.thicknessfromeachLayerfeuillete[i];
+                            i++;
+                        }
+                        res += ".x";
+                    }
+                    res += "/.../";
+                    //2nd layer
+                    if (thicknesses == null)
+                        res += thickness + " " + WithoutNF(input2);
+                    else 
+                    {
+                        i = 0;
+                        while (i < thicknesses.Length && thicknesses[i] > 0) 
+                        {
+                            res += thicknesses[i];
+                            i++;
+                        }
+                        res += ".x";
+                    }
+                    break;
+                case 3:
+                    //1st layer
+                    if (fi.thicknessformonolithiques > 0) 
+                        res += fi.thicknessformonolithiques + " " + WithoutNF(input);
+                    else
+                    {
+                        i = 0;
+                        while (i < fi.thicknessfromeachLayerfeuillete.Length && fi.thicknessfromeachLayerfeuillete[i] > 0)
+                        {
+                            res += fi.thicknessfromeachLayerfeuillete[i];
+                            i++;
+                        }
+                        res += ".x";
+                    }
+                    res += "/.../";
+                    //2nd layer
+                    if (fi.thicknessformonolithiques2 > 0)
+                        res += fi.thicknessformonolithiques2 + " " + WithoutNF(input2);
+                    else 
+                    {
+                        i = 0;
+                        while (i < fi.thicknessfromeachLayerfeuillete2.Length && fi.thicknessfromeachLayerfeuillete2[i] > 0)
+                        {
+                            res += fi.thicknessfromeachLayerfeuillete2[i];
+                            i++;
+                        }
+                        res += ".x";
+                    }
+                    res += "/.../";
+                    //3rd layer 
+                    if (thicknesses == null)
+                        res += thickness + " " + WithoutNF(input3);
+                    else 
+                    {
+                        i = 0;
+                        while (i < thicknesses.Length && thicknesses[i] > 0) 
+                        {
+                            res += thicknesses[i];
+                            i++;
+                        }
+                        res += ".x";
+                    }
+                    break;
+            }
+            return res;
+        }
+
+        public string WithoutNF(string input) 
+        {
+            string searchString = " NF";
+            int index = input.IndexOf(searchString);
+            if (index != -1)
+            {
+                return input.Substring(0, index);
+            }
+            else
+            {
+                return input;
+            }
+        }
+
     }
 }

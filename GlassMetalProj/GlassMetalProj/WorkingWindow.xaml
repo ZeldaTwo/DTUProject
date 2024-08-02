@@ -65,7 +65,7 @@
             <ComboBoxItem Content="Réunion" />
         </ComboBox>
 
-        <ComboBox Name="FieldTypecbx" Grid.Column="0" Margin="28,230,445,37" SelectionChanged="FieldTypecbx_SelectionChanged" >
+        <ComboBox Name="FieldTypecbx" Grid.Column="0" Margin="28,230,445,57" SelectionChanged="FieldTypecbx_SelectionChanged" >
             <ComboBoxItem Content="IV"/>
             <ComboBoxItem Content="IIIb"/>
             <ComboBoxItem Content="IIIa"/>
@@ -139,7 +139,7 @@
             </Button.Template>
         </Button>
 
-        <Button x:Name="Calculatepressure" Content="Calculate Pressure" Grid.Column="0" Grid.Row="1" Margin="412,42,12,226" Visibility="Visible" Click="Calculatepressure_Click" />
+        <Button x:Name="Calculatepressure" Content="Calculate Pressure" Grid.Column="0" Grid.Row="1" Margin="412,141,12,139" Visibility="Visible" Click="Calculatepressure_Click" />
 
         <Label Content="Pression (Pa) :" Grid.Row="1" Width="140" Height="50" FontSize="14
                " Margin="5,283,405,-8" RenderTransformOrigin="0.754,0.425" Grid.Column="1" />
@@ -178,7 +178,6 @@
 
         <TextBlock Background="#FF95A99D" TextWrapping="Wrap" Text="Risque d'Avalanche" Margin="334,145,106,152" LineHeight="16"/>
         <CheckBox x:Name="Avalanche_checkbx" Margin="313,133,127,139" Checked="Avalanche_checkbx_Checked" Unchecked="Avalanche_checkbx_Unchecked"  />
-        <Label Content="TRAVAIL A FAIRE POUR L'INCLINÉ !!!!!!!" HorizontalAlignment="Left" Margin="57,45,0,0" Grid.Row="1" VerticalAlignment="Top"/>
 
         <ComboBox x:Name="GlazingSupport" SelectionChanged="GlazingSupport_SelectionChanged" Grid.Column="1" FontSize="10" Margin="29,41,245,250">
             <ComboBoxItem Content="En appui sur toute la périphérie" />
@@ -403,7 +402,78 @@
         <Label Content="eR calculée (en mm) :" FontSize="14" HorizontalAlignment="Left" Margin="335,178,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084" Grid.Column="1"/>
         <TextBox x:Name="eRtxtbox"  HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Right" Margin="480,179,0,0" Grid.Column="1" />
         <TextBox x:Name="eFtxtbox"  HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Right" Margin="480,214,0,0" Grid.Column="1" />
-        <Label Content="eF calculée (en mm) :" FontSize="14" HorizontalAlignment="Left" Margin="335,212,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084" Grid.Column="1"/>
+        <Label Content="eF calculée (en mm) :" FontSize="14" HorizontalAlignment="Left" Margin="335,213,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084" Grid.Column="1"/>
+        <Label Content="flèche calculée (en mm) :" FontSize="14" HorizontalAlignment="Left" Margin="312,246,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084" Grid.Column="1"/>
+
+        <TextBox x:Name="flèchetxtbox"  HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Right" Margin="480,249,0,0" Grid.Column="1" />
+
+        <Label x:Name="DistanceMaintienslbl" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="234" Height="28" Content="Distance entre les deux maintiens (en m) :" Margin="322,160,0,0"/>
+        <TextBox x:Name="DistanceMaintienstxtbx" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Width="60" FontSize="13" PreviewTextInput="Preview_Text_Input" Margin="0,188,81,0" />
+
+        <Label x:Name="Altitudelbl" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="97" Height="33" Content="Altitude (en m) :" Margin="8,325,0,0" Grid.RowSpan="2"/>
+        <TextBox x:Name="Altitudetxtbx" PreviewTextInput="Preview_Text_Input" VerticalAlignment="Top" TextAlignment="Center" HorizontalAlignment="Left" Width="62" FontSize="13" Margin="115,8,0,0" Grid.Row="1" />
+
+        <Label x:Name="Coefflbl" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="98" Height="33" Content="Coefficient μ  :" Margin="8,43,0,0" Grid.Row="1"/>
+
+        <Button x:Name="HelpButtonCoeff" Width="23" Height="20" Visibility="Visible"
+            HorizontalAlignment="Left" VerticalAlignment="Top"
+            Background="LightYellow" BorderBrush="Black" BorderThickness="1"
+            ToolTip="Cliquez ici pour afficher comment connaître la valeur de μ" Click="HelpButton_Click" Margin="96,44,0,0" Grid.Row="1" >
+            <Button.Template>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Ellipse Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding BorderThickness}"/>
+                        <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold"/>
+                    </Grid>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <ComboBox x:Name="coeffcombobx" Margin="11,78,413,211" Grid.Row="1">
+            <ComboBoxItem Content="0,8"/>
+            <ComboBoxItem Content="1,6"/>
+            <ComboBoxItem Content="2,2"/>
+            <ComboBoxItem Content="2,8"/>
+        </ComboBox>
+        <Label x:Name="PressionAvalanchelbl" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="155" Height="34" Content="Pression P Avalanche (Pa) : " Margin="304,201,0,0"/>
+        <TextBox x:Name="PressionAvalanchetxtbx" PreviewTextInput="Preview_Text_Input" VerticalAlignment="Top" TextAlignment="Center" HorizontalAlignment="Left" Width="70" FontSize="13" Margin="463,203,0,0" />
+        <Label x:Name="Coeff_Ce_Ctlbl" HorizontalAlignment="Left" VerticalAlignment="Top" Width="98" Height="33" Content="Coefficient Ce :" Margin="210,325,0,0" Grid.RowSpan="2"/>
+        <TextBox x:Name="CoeffCetxtbx" PreviewTextInput="Preview_Text_Input" Text="1,0"  VerticalAlignment="Top" TextAlignment="Center" HorizontalAlignment="Left" Width="51" FontSize="13" Margin="308,8,0,0" Grid.Row="1" />
+        <TextBox x:Name="CoeffCttxtbx" PreviewTextInput="Preview_Text_Input" Text="1,0" VerticalAlignment="Top" TextAlignment="Center" HorizontalAlignment="Left" Width="51" FontSize="13" Margin="472,8,0,0" Grid.Row="1" />
+        <Label x:Name="Coeff_Ce_Ctlbl2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="98" Height="33" Content="Coefficient Ct :" Margin="375,325,0,0" Grid.RowSpan="2"/>
+        <Label x:Name="SnowZonelbl" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="98" Height="33" Content=" Zone de neige :" Margin="164,43,0,0" Grid.Row="1"/>
+        <Button x:Name="HelpButtonSnowZone" Width="24" Height="20" Visibility="Visible"
+            HorizontalAlignment="Center" VerticalAlignment="Top"
+            Background="LightYellow" BorderBrush="Black" BorderThickness="1"
+            ToolTip="Cliquez ici pour afficher la carte des régions de neige en France" Click="HelpButton_Click" Margin="0,44,0,0" Grid.Row="1" >
+            <Button.Template>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Ellipse Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding BorderThickness}"/>
+                        <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold"/>
+                    </Grid>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <ComboBox x:Name="SnowZonecombobx" Margin="172,78,291,211" Grid.Row="1" >
+            <ComboBoxItem Content="A1"/>
+            <ComboBoxItem Content="A2"/>
+            <ComboBoxItem Content="B1"/>
+            <ComboBoxItem Content="B2"/>
+            <ComboBoxItem Content="C1"/>
+            <ComboBoxItem Content="C2"/>
+            <ComboBoxItem Content="D"/>
+            <ComboBoxItem Content="E"/>
+            <ComboBoxItem Content="Pas de Neige"/>
+        </ComboBox>
+        <Label x:Name="eplbl" HorizontalAlignment="Left" VerticalAlignment="Top" Width="206" Height="33" Content="épaisseur totale du vitrage (en mm) :" Margin="15,139,0,0" Grid.Row="1" RenderTransformOrigin="-0.351,3.698"/>
+        <TextBox x:Name="eptxtbx" PreviewTextInput="Preview_Text_Input" Text=""  VerticalAlignment="Top" TextAlignment="Center" HorizontalAlignment="Left" Width="51" FontSize="13" Margin="230,141,0,0" Grid.Row="1" />
+        <TextBox x:Name="ManualPressuretxtbx" HorizontalAlignment="Left" Height="30" Grid.Row="1" FontSize="14" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="82" TextAlignment="Center" Margin="451,80,0,0" />
+        <Label x:Name="ManualPressurelbl" HorizontalAlignment="Left" VerticalAlignment="Top" Width="117" Height="33" Content="Pression Manuelle :" Margin="333,80,0,0" Grid.Row="1"/>
+
+        <Label Content="α calculé :" FontSize="14" HorizontalAlignment="Left" Margin="402,281,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084" Grid.Column="1"/>
+        <TextBox x:Name="alphatxtbx"  HorizontalAlignment="Left" Height="29" Grid.Row="1" FontSize="16" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52" TextAlignment="Right" Margin="480,284,0,0" Grid.Column="1" />
+
+        <Label x:Name="SummaryGlazinglbl" Content="" FontSize="14" HorizontalAlignment="Left" Margin="10,104,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-0.205,0.084" Grid.Column="1"/>
 
 
     </Grid>

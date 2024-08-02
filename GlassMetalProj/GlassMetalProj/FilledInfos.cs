@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Web.Hosting;
 using System.Windows;
 
 namespace GlassMetalProj
@@ -23,18 +25,12 @@ namespace GlassMetalProj
 
         public double[] pressureinclined = new double[7];
 
-        //Angle for the inclined glazing
-        public double BetaAngle { get; set; }
-
         public double Altitude { get; set; }
-
+        public double CoeffMicro { get; set; } = 0;
 
         //Snow if inclined
-        public int[] SnowChargeBelow200;
-        public int[] SnowChargeAD;
-
-        public bool Avalanche;
-
+        public double[] SnowChargeBelow200;
+        public double[] SnowChargeAD;
         public double S1 {  get; set; }
         public double S2 { get; set; }
 
@@ -46,7 +42,7 @@ namespace GlassMetalProj
         public double[] equivalencefactor2 { get; set; }
         public double[] equivalencefactor3 { get; set; }
 
-        
+        public double[] alphafactor {  get; set; }
 
         //Only 2 layers on the IsolantGlazing
         public int[] GlazingTypeFromLayersIndexes = new int[4];
@@ -73,6 +69,8 @@ namespace GlassMetalProj
             IndexFieldType = -1;
             InitalizePressures(pathPressure);
             InitializeEquivalenceFactors(pathFactors);
+            InitializeAlpha();
+            InitalizeSnowPressures();
         }
 
         public void CalculateDimensions(int i, double a, double b, double c, double d) 
@@ -138,8 +136,9 @@ namespace GlassMetalProj
             L = Math.Round(L, 2);
             l = Math.Round(l, 2);
         }
-        public void CalculatePressure() 
+        public void CalculatePressure(double ep, int indexS, double mu, double Ce, double Ct, bool Av, double PressureAv) 
         {
+            pressureinclined = new double[7];
             if (vitrageoutside)
             {
                 if (!inFrance)
@@ -148,16 +147,49 @@ namespace GlassMetalProj
                 int i = IndexRegion * 5 + IndexFieldType;
                 int j = IndexHeight;
                 Pressure = windPressure[i, j];
-                if (inclined) 
+                if (inclined)
                 {
                     //Pvent 
                     pressureinclined[0] = Pressure;
 
                     //Poids Propre
+                    double Pp = 25 * ep;
+
+                    //P2 && P3
+                    //NO SNOW
+                    if (indexS == 8)
+                    {
+                        pressureinclined[1] = 0;
+                        pressureinclined[2] = 0;
+                    }
+                    else
+                    {
+                        FindS1andS2(indexS, mu, Ce, Ct);
+                        pressureinclined[1] = 3.75 * (S1 + Pp);
+                        pressureinclined[2] = 2.2 * (S2 + Pp);
+                    }
+                    //P4 && P5
+                    pressureinclined[3] = 0;
+                    pressureinclined[4] = 0;
+
+                    //P6
+                    pressureinclined[5] = 0;
+
+                    //P7
+                    if (Av)
+                        pressureinclined[6] = 2.5 * (PressureAv + Pp);
+
+                    Pressure = Math.Round(pressureinclined.Max());
 
 
-                    //P2
                 }
+            }
+            else if (inclined)
+            {
+                pressureinclined[0] = 600;
+                pressureinclined[1] = 4.7 * (ep * 25);
+                pressureinclined[2] = pressureinclined[0] + (ep * 25);
+                Pressure = Math.Round(pressureinclined.Max());
             }
             else Pressure = 600;
         }
@@ -166,17 +198,42 @@ namespace GlassMetalProj
             if (Altitude <= 200) 
             {
                 double Sk = SnowChargeBelow200[indexS];
-                S1 = Sk * mu + Ce * Ct;
+                S1 = Sk * mu * Ce * Ct;
             }
             else
             {
-                double deltaS;
+                double deltaS = 0;
                 if (Altitude > 200 && Altitude <= 500)
-                    deltaS = Altitude - 200;
-                else if (Altitude > 500 && Altitude <= 1000) { }
+                {
+                    if (indexS == 7)
+                        deltaS = 1.5 * Altitude - 300;
+                    else
+                        deltaS = Altitude - 200;
+                }
+                else if (Altitude > 500 && Altitude <= 1000)
+                {
+                    if (indexS == 7)
+                        deltaS = 3.5 * Altitude - 1300;
+                    else
+                        deltaS = 1.5 * Altitude - 450;
+                }
+                else if (Altitude > 1000 && Altitude <= 2000)
+                {
+                    if (indexS == 7)
+                        deltaS = 7 * Altitude - 4800;
+                    else
+                        deltaS = 3.5 * Altitude - 2450;
+                }
+                else
+                    MessageBox.Show("Au delà de 2000m d'altitude, la charge de neige au sol doit être indiquée dans le DPM.\n" + "La pression actuelle est éronnée.");
+                if (deltaS > 0) 
+                {
+                    double Sk = SnowChargeBelow200[indexS];
+                    S1 = (Sk + deltaS) * mu * Ce * Ct;
+                }
             }
             double Sad = SnowChargeAD[indexS];
-            S2 = Sad * mu + Ce * Ct;
+            S2 = Sad * mu * Ce * Ct;
         }
 
         private void InitializeEquivalenceFactors(string path) 
@@ -221,8 +278,6 @@ namespace GlassMetalProj
 
             }
         }
-
-
         private void InitalizePressures(string filepath)
         {
             if (filepath == string.Empty)
@@ -477,6 +532,178 @@ namespace GlassMetalProj
 
             }
         }
+        private void InitializeAlpha() 
+        {
+            alphafactor = new double[33];
+            //Maintien 4 côtés 
+            alphafactor[0] = 0.6571;
+            alphafactor[1] = 0.8;
+            alphafactor[2] = 0.9714;
+            alphafactor[3] = 1.1857;
+            alphafactor[4] = 1.4143;
+            alphafactor[5] = 1.6429;
+            alphafactor[6] = 1.8714;
+            alphafactor[7] = 2.1;
+            alphafactor[8] = 2.1;
+            alphafactor[9] = 2.1143;
+            alphafactor[10] = 2.1143;
+
+            //Maintien 3 côtés
+            alphafactor[11] = 0.68571;
+            alphafactor[12] = 0.73143;
+            alphafactor[13] = 0.8;
+            alphafactor[14] = 0.91429;
+            alphafactor[15] = 1.14286;
+            alphafactor[16] = 1.51429;
+            alphafactor[17] = 1.56286;
+            alphafactor[18] = 1.71;
+            alphafactor[19] = 1.85714;
+            alphafactor[20] = 2;
+            alphafactor[21] = 2.05714;
+            alphafactor[22] = 2.11429;
+            alphafactor[23] = 2.17143;
+            alphafactor[24] = 2.22857;
+            alphafactor[25] = 2.28571;
+            alphafactor[26] = 2.31429;
+            alphafactor[27] = 2.35714;
+            alphafactor[28] = 2.37143;
+            alphafactor[29] = 2.38571;
+            alphafactor[30] = 2.38571;
+            alphafactor[31] = 2.38571;
+            alphafactor[32] = 2.1143;
+        }
+
+        public double findAlpha(int type, double b) 
+        {
+            double lOverL = l / L;
+
+            double overB = 0;
+            if (b != 0) 
+            {
+                if (L == b)
+                    overB = l;
+                else
+                    overB = L;
+            }
+
+            if (type == 0)
+            {
+                if (lOverL <= 1 && lOverL >= 0.9)
+                    return LinearRegression(1, alphafactor[0], 0.9, alphafactor[1], lOverL);
+                else if (lOverL < 0.9 && lOverL >= 0.8)
+                    return LinearRegression(0.9, alphafactor[1], 0.8, alphafactor[2], lOverL);
+                else if (lOverL < 0.8 && lOverL >= 0.7)
+                    return LinearRegression(0.8, alphafactor[2], 0.7, alphafactor[3], lOverL);
+                else if (lOverL < 0.7 && lOverL >= 0.6)
+                    return LinearRegression(0.7, alphafactor[3], 0.6, alphafactor[4], lOverL);
+                else if (lOverL < 0.6 && lOverL >= 0.5)
+                    return LinearRegression(0.6, alphafactor[4], 0.5, alphafactor[5], lOverL);
+                else if (lOverL < 0.5 && lOverL >= 0.4)
+                    return LinearRegression(0.5, alphafactor[5], 0.4, alphafactor[6], lOverL);
+                else if (lOverL < 0.4 && lOverL >= 0.3)
+                    return LinearRegression(0.4, alphafactor[6], 0.3, alphafactor[7], lOverL);
+                else if (lOverL < 0.3 && lOverL >= 0.2)
+                    return 2.1;
+                else if (lOverL < 0.2 && lOverL >= 0.1)
+                    return LinearRegression(0.2, alphafactor[8], 0.1, alphafactor[9], lOverL);
+                else if (lOverL < 0.1)
+                    return 2.1143;
+                else
+                    throw new Exception("Error with the value of l Over L");
+            }
+            else if (type == 1) 
+            {
+                double coeff = overB / b;
+                if (coeff < 0.3 && coeff > 0)
+                    return 0.68571;
+                else if (coeff < 0.333 && coeff >= 0.3)
+                    return LinearRegression(0.33, alphafactor[12], 0.3, alphafactor[11], coeff);
+                else if (coeff < 0.35 && coeff >= 0.33)
+                    return LinearRegression(0.35, alphafactor[13], 0.33, alphafactor[12], coeff);
+                else if (coeff < 0.4 && coeff >= 0.35)
+                    return LinearRegression(0.4, alphafactor[14], 0.36, alphafactor[13], coeff);
+                else if (coeff < 0.5 && coeff >= 0.4)
+                    return LinearRegression(0.5, alphafactor[15], 0.4, alphafactor[14], coeff);
+                else if (coeff < 0.667 && coeff >= 0.5)
+                    return LinearRegression(0.667, alphafactor[16], 0.5, alphafactor[15], coeff);
+                else if (coeff < 0.7 && coeff >= 0.667)
+                    return LinearRegression(0.7, alphafactor[17], 0.667, alphafactor[16], coeff);
+                else if (coeff < 0.8 && coeff >= 0.7)
+                    return LinearRegression(0.8, alphafactor[18], 0.7, alphafactor[17], coeff);
+                else if (coeff < 0.9 && coeff >= 0.8)
+                    return LinearRegression(0.9, alphafactor[19], 0.8, alphafactor[18], coeff);
+                else if (coeff < 1 && coeff >= 0.9)
+                    return LinearRegression(1, alphafactor[20], 0.9, alphafactor[19], coeff);
+                else if (coeff < 1.1 && coeff >= 1)
+                    return LinearRegression(1.1, alphafactor[21], 1, alphafactor[20], coeff);
+                else if (coeff < 1.2 && coeff >= 1.1)
+                    return LinearRegression(1.2, alphafactor[22], 1.1, alphafactor[21], coeff);
+                else if (coeff < 1.3 && coeff >= 1.2)
+                    return LinearRegression(1.3, alphafactor[23], 1.2, alphafactor[22], coeff);
+                else if (coeff < 1.4 && coeff >= 1.3)
+                    return LinearRegression(1.4, alphafactor[24], 1.3, alphafactor[23], coeff);
+                else if (coeff < 1.5 && coeff >= 1.4)
+                    return LinearRegression(1.5, alphafactor[25], 1.4, alphafactor[24], coeff);
+                else if (coeff < 1.75 && coeff >= 1.5)
+                    return LinearRegression(1.75, alphafactor[26], 1.5, alphafactor[25], coeff);
+                else if (coeff < 2 && coeff >= 1.75)
+                    return LinearRegression(2, alphafactor[27], 1.75, alphafactor[26], coeff);
+                else if (coeff < 3 && coeff >= 2)
+                    return LinearRegression(3, alphafactor[28], 2, alphafactor[27], coeff);
+                else if (coeff < 4 && coeff >= 3)
+                    return LinearRegression(4, alphafactor[29], 3, alphafactor[28], coeff);
+                else if (coeff >= 4)
+                    return 2.38571;
+                else
+                    throw new Exception("Error with L / b (less than 0)");
+            }
+            else 
+                return 2.1143;
+
+        }
+
+        public static double LinearRegression(double x1, double y1, double x2, double y2, double x)
+        {
+            if (x > x1 || x < x2)
+                throw new Exception("Error with x value");
+            // Calcul de la pente
+            double beta1 = (y2 - y1) / (x2 - x1);
+
+            // Calcul de l'ordonnée à l'origine
+            double beta0 = y1 - beta1 * x1;
+
+            // Calcul de la valeur de f(x)
+            double y = beta0 + beta1 * x;
+
+            return y;
+        }
+
+        public void InitalizeSnowPressures() 
+        {
+            SnowChargeBelow200 = new double[8];
+            //SnowChargeBelow200m
+            SnowChargeBelow200[0] = 450;
+            SnowChargeBelow200[1] = 450;
+            SnowChargeBelow200[2] = 550;
+            SnowChargeBelow200[3] = 550;
+            SnowChargeBelow200[4] = 650;
+            SnowChargeBelow200[5] = 650;
+            SnowChargeBelow200[6] = 900;
+            SnowChargeBelow200[7] = 1400;
+
+            SnowChargeAD = new double[8];
+            //SnowChargeAD
+            SnowChargeAD[0] = 0;
+            SnowChargeAD[1] = 1000;
+            SnowChargeAD[2] = 1000;
+            SnowChargeAD[3] = 1350;
+            SnowChargeAD[4] = 0;
+            SnowChargeAD[5] = 1350;
+            SnowChargeAD[6] = 1800;
+            SnowChargeAD[7] = 0;
+        }
+
+        
 
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ControlzEx.Theming;
 using GlassMetalProj;
 
 namespace TestingCode
@@ -41,10 +42,11 @@ namespace TestingCode
             "Vitrage feuilleté à trois composants",
         };
 
+        public static FilledInfos fi;
 
         static void Main(string[] args)
         {
-            FilledInfos fi = new FilledInfos("", "");
+            fi = new FilledInfos("", "");
             MathsHelper mathsHelper = new MathsHelper(fi);
 
             //// Starting the Tests; 
@@ -126,7 +128,52 @@ namespace TestingCode
             Console.WriteLine("épaisseur0 : " + fi.thicknessformonolithiques + " || + type du vitrage : " + glassStandards[fi.GlazingTypeMonolithiqueIndex]);
             Console.WriteLine("épaisseur1 : " + thickness + " || + type du vitrage : " + glassStandards[indexEpsilon]);
 
+            Console.WriteLine("\n--------------------------------------------------------------------------------------------------------");
+
+            //-------------------------------------------------------------------------------------------------------------------------------------------------
+            //Test alpha for fleche -- Type 0
+            double[] ltest = new double[12] { 1, 0.92, 0.67, 1.03, 1.02, 0.65, 0.2, 0.48, 1.28, 4.2,0.72,2.7 };
+            double[] Ltest = new double[12] { 2.9, 2.4, 2.8, 3.87, 1.14, 1.567, 1.2, 0.7, 3.21, 5.4, 1.58, 4.53};
+
+            for(int j = 0; j < ltest.Length; j++) 
+            {
+                ChangelandL(ltest[j], Ltest[j]);
+                Console.WriteLine();
+                Console.WriteLine("l / L :" + fi.l / fi.L);
+                Console.WriteLine("The value of alpha is : " + fi.findAlpha(0,0));
+            }
+            Console.WriteLine("\n-----------------------------Test for Type 1 with b = l------------------------------------");
+            //Test alpha for fleche -- Type 1
+            //Test when b is l 
+            for (int j = 0; j < ltest.Length; j++) 
+            {
+                ChangelandL(ltest[j], Ltest[j]);
+                Console.WriteLine();
+                Console.WriteLine("L / b :" + fi.L / fi.l);
+                Console.WriteLine("The value of alpha is : " + fi.findAlpha(1, fi.l));
+
+            }
+            Console.WriteLine("\n-----------------------------Test for Type 1 with b = L------------------------------------");
+
+
+            //Test alpha for fleche -- Type 1
+            //Test when b is L 
+            for (int j = 0; j < ltest.Length; j++)
+            {
+                ChangelandL(ltest[j], Ltest[j]);
+                Console.WriteLine();
+                Console.WriteLine("L / b :" + fi.l / fi.L);
+                Console.WriteLine("The value of alpha is : " + fi.findAlpha(1, fi.L));
+
+            }
+
             Console.ReadKey();
+
+        }
+        public static void ChangelandL(double newl,double newL) 
+        {
+            fi.l = newl; 
+            fi.L = newL;
         }
     }
 }
