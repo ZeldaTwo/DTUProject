@@ -755,10 +755,13 @@ namespace GlassMetalProj
                 MessageBox.Show("Veuillez sélectionner une forme");
             if (Dimensioncbx.SelectedIndex == 0) 
             {
-                if (FilledInfos.l == 0 || FilledInfos.L == 0)
-                    MessageBox.Show("Veuillez renseigner les longueurs L et l" + " (Après avoir entré une valeur, appuyez sur entrée)");
+                if (!Double.TryParse(ltxtbx.Text, out double l) || !Double.TryParse(Ltxtbx.Text,out double L))
+                    MessageBox.Show("Veuillez renseigner les longueurs L et l, et les renseigner avec des valeurs correctes" );
                 else 
                 {
+                    FilledInfos.l = l;
+                    FilledInfos.L = L;
+
                     Lcalcultxtbx.Text = FilledInfos.L.ToString();
                     lcalcultxtbx.Text = FilledInfos.l.ToString();
 
@@ -769,8 +772,8 @@ namespace GlassMetalProj
                 
             if (Dimensioncbx.SelectedIndex == 1 || Dimensioncbx.SelectedIndex == 2)
             {
-                if (a == 0 || b == 0)
-                    MessageBox.Show("Veuillez renseigner les longueurs a et b." + " (Après avoir entré une valeur, appuyez sur entrée)");
+                if (!Double.TryParse(atxtbx.Text,out a) || !Double.TryParse(btxtbx.Text, out b))
+                    MessageBox.Show("Veuillez renseigner les longueurs a et b et les renseigner avec des valeurs correctes");
                 else 
                 {
                     FilledInfos.CalculateDimensions(Dimensioncbx.SelectedIndex, a, b, c, d);
@@ -784,8 +787,8 @@ namespace GlassMetalProj
             }
             if (Dimensioncbx.SelectedIndex == 3) 
             {
-                if (a == 0 || b == 0 || c == 0)
-                    MessageBox.Show("Veuillez renseigner les longueurs a, b et c." + " (Après avoir entré une valeur, appuyez sur entrée)");
+                if (!Double.TryParse(atxtbx.Text, out a) || !Double.TryParse(btxtbx.Text, out b) || !Double.TryParse(ctxtbx.Text, out c))
+                    MessageBox.Show("Veuillez renseigner les longueurs a, b et c et les renseigner avec des valeurs correctes");
                 else 
                 {
                     FilledInfos.CalculateDimensions(3, a, b, c, d);
@@ -799,8 +802,8 @@ namespace GlassMetalProj
             }
             if (Dimensioncbx.SelectedIndex == 4) 
             {
-                if (a == 0 || b == 0 || c == 0 || d == 0)
-                    MessageBox.Show("Veuillez renseigner les longueurs a, b, c et d." + " (Après avoir entré une valeur, appuyez sur entrée)");
+                if (!Double.TryParse(atxtbx.Text, out a) || !Double.TryParse(btxtbx.Text, out b) || !Double.TryParse(ctxtbx.Text, out c) || !Double.TryParse(dtxtbx.Text, out d))
+                    MessageBox.Show("Veuillez renseigner les longueurs a, b, c et d et les renseigner avec des valeurs correctes");
                 else 
                 {
                     FilledInfos.CalculateDimensions(4, a, b, c, d);
@@ -812,8 +815,8 @@ namespace GlassMetalProj
             }
             if (Dimensioncbx.SelectedIndex == 5) 
             {
-                if (a == 0)
-                    MessageBox.Show("Veuillez renseigner la longueur a" + " (Après avoir entré une valeur, appuyez sur entrée)");
+                if (!Double.TryParse(atxtbx.Text, out a))
+                    MessageBox.Show("Veuillez renseigner la longueur a et la renseigner avec une valeur correcte");
                 else 
                 {
                     FilledInfos.CalculateDimensions(5, a, b, c, d);
@@ -826,8 +829,8 @@ namespace GlassMetalProj
             }
             if (Dimensioncbx.SelectedIndex == 6)
             {
-                if (b == 0 || c == 0)
-                    MessageBox.Show("Veuillez renseigner les longueurs b et c." + " (Après avoir entré une valeur, appuyez sur entrée)");
+                if (!Double.TryParse(btxtbx.Text, out b) || !Double.TryParse(ctxtbx.Text, out c))
+                    MessageBox.Show("Veuillez renseigner les longueurs b et c et les renseigner avec des valeurs correctes");
                 else 
                 {
                     FilledInfos.CalculateDimensions(6, a, b, c, d);
@@ -1368,6 +1371,7 @@ namespace GlassMetalProj
                     {
                         MessageBox.Show("L'épaisseur de résistance ne vérifie pas la condition : eR ≥ e1 * c \n"
                             + "Veuillez modifier vos épaisseurs ou bien vos types de vitrages pour avoir un résultat correct");
+                        SummaryGlazinglbl.Foreground = new SolidColorBrush(Colors.Red);
                     }
                     else
                     {
@@ -1402,10 +1406,14 @@ namespace GlassMetalProj
                             }
                         }
 
-                        if (!mathsHelper.fCalculation(GlazingSupport.SelectedIndex, doubleGlazing, b, second_b))
+                        if (!mathsHelper.fCalculation(GlazingSupport.SelectedIndex, doubleGlazing, b, second_b)) 
+                        {
                             MessageBox.Show("La flèche ne respecte pas les conditions nécessaires, veuillez ajustez les valeurs de eF ou les dimensions ainsi que l'épaisseur pour que la flèche soit admissible");
+                            SummaryGlazinglbl.Foreground = new SolidColorBrush(Colors.Red);
+                        }
                         else
                         {
+                            SummaryGlazinglbl.Foreground = new SolidColorBrush(Colors.Green);
                             MessageBox.Show("La flèche et eR sont valides, le vitrage convient");
                             alphatxtbx.Text = mathsHelper.alpha.ToString();
                             flèchetxtbox.Text = mathsHelper.f.ToString();
