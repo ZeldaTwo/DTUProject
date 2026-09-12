@@ -1,151 +1,149 @@
 # DTUProject — GlassMetal
 
-Logiciel de bureau Windows permettant le calcul des **épaisseurs de résistance** et de **flèche**
-d'un vitrage, conformément au **DTU 39 (édition 2012)**.
+A Windows desktop application that calculates the **resistance thickness** and **deflection**
+of a glazing unit, in accordance with the French **DTU 39 standard (2012 edition)**.
 
 ---
 
-## À quoi sert le logiciel
+## Overview
 
-Dimensionner un vitrage selon le DTU 39 suppose de croiser plusieurs abaques réglementaires
-(cartes des régions de vent, zones de neige, catégories de terrain, coefficients d'équivalence
-propres à chaque type de glace), d'interpoler entre les valeurs tabulées, puis d'enchaîner
-une série de vérifications.
+Sizing a glazing unit under DTU 39 means cross-referencing several regulatory charts — wind
+region maps, snow zones, terrain categories, equivalence coefficients specific to each type of
+glass — interpolating between tabulated values, and then running a series of checks.
 
-GlassMetal automatise ce travail. À partir des caractéristiques du chantier et de la composition
-du vitrage envisagée, il indique si cette composition convient, et affiche les valeurs
-intermédiaires à chaque étape pour que le résultat reste vérifiable.
-
----
-
-## Comment on l'utilise
-
-L'application s'ouvre sur un écran d'accueil, puis présente une fenêtre de travail unique
-où l'on renseigne successivement quatre groupes d'informations.
-
-### 1. Le chantier
-
-Position du vitrage (intérieur ou extérieur), localisation (France métropolitaine ou Outre-Mer),
-inclinaison, région de vent, catégorie de terrain et hauteur du vitrage.
-
-Pour un vitrage incliné, des champs complémentaires apparaissent : altitude, zone de neige,
-coefficients de forme et d'exposition, et éventuellement une pression d'avalanche.
-
-Le logiciel en déduit la **pression appliquée au vitrage**. Une pression peut aussi être saisie
-manuellement pour court-circuiter ce calcul.
-
-### 2. La géométrie
-
-Sept formes sont prises en charge : rectangle, triangle isocèle, triangle rectangle, trapèze
-rectangle, trapèze, cercle, et demi-cercle surmontant un rectangle.
-
-Les formes non rectangulaires sont automatiquement ramenées à un **rectangle équivalent**,
-dont le logiciel affiche les dimensions, le rapport de forme et la surface.
-
-### 3. Le mode de pose
-
-Quatre modes de prise en feuillure sont proposés : appui sur toute la périphérie, sur trois côtés,
-sur deux côtés opposés, ou sur deux côtés opposés avec maintiens ponctuels. On précise selon
-le cas quel côté constitue le bord libre et où se situent les maintiens.
-
-Le logiciel calcule alors l'**épaisseur minimale requise**.
-
-### 4. La composition du vitrage
-
-Quatre familles de vitrage sont gérées — monolithique, feuilleté, isolant 2 faces et isolant
-3 faces — chacune déclinée en plusieurs compositions possibles (double monolithique,
-monolithique + feuilleté, triple feuilleté, etc.).
-
-Pour les vitrages isolants, un assistant fait saisir chaque couche l'une après l'autre :
-type de glace choisi parmi une vingtaine de références normalisées, et épaisseur.
-
-Le calcul final indique si le vitrage convient, ou bien quelle condition n'est pas respectée.
-
-> Tout au long de la saisie, des boutons **« ? »** affichent les cartes et abaques du DTU :
-> régions de vent, zones de neige, catégories de terrain, coefficients, formes de vitrage.
+GlassMetal automates that work. Given the site conditions and the intended glazing composition,
+it states whether that composition is suitable, and displays the intermediate values at every
+step so the result stays verifiable.
 
 ---
 
-## Comment c'est fait
+## Usage
 
-Application **WPF** écrite en **C#** sur **.NET Framework 4.7.2**, habillée par la bibliothèque
-d'interface **MahApps.Metro**.
+The application opens on a welcome screen, then presents a single working window where four
+groups of information are entered in turn.
 
-Le projet sépare l'interface du calcul :
+### 1. Site
 
-| Élément | Rôle |
+Glazing position (indoor or outdoor), location (mainland France or overseas territories), tilt,
+wind region, terrain category and glazing height.
+
+For a tilted glazing unit, additional fields appear: altitude, snow zone, shape and exposure
+coefficients, and optionally an avalanche pressure.
+
+From these, the application derives the **pressure applied to the glazing**. A pressure can also
+be entered manually to bypass this calculation.
+
+### 2. Geometry
+
+Seven shapes are supported: rectangle, isosceles triangle, right triangle, right trapezoid,
+trapezoid, circle, and a semicircle above a rectangle.
+
+Non-rectangular shapes are automatically reduced to an **equivalent rectangle**, whose dimensions,
+aspect ratio and surface area are displayed.
+
+### 3. Support
+
+Four mounting configurations are available: supported along the full perimeter, on three sides,
+on two opposite sides, or on two opposite sides with point supports. Depending on the case, you
+specify which side is the free edge and where the point supports are located.
+
+The application then computes the **minimum required thickness**.
+
+### 4. Composition
+
+Four glazing families are handled — monolithic, laminated, double insulating and triple
+insulating — each available in several compositions (double monolithic, monolithic + laminated,
+triple laminated, and so on).
+
+For insulating units, a step-by-step assistant collects each layer in turn: the type of glass,
+chosen from around twenty standardised references, and its thickness.
+
+The final calculation reports whether the glazing is suitable, or which condition fails.
+
+> Throughout the form, **"?"** buttons display the DTU charts: wind regions, snow zones, terrain
+> categories, coefficients and glazing shapes.
+
+---
+
+## Architecture
+
+A **WPF** application written in **C#** on **.NET Framework 4.7.2**, styled with the
+**MahApps.Metro** UI library.
+
+The project separates the interface from the calculation:
+
+| Component | Role |
 |---|---|
-| `MainWindow` | Écran d'accueil |
-| `WorkingWindow` | Fenêtre de travail principale, où se fait toute la saisie |
-| `HelperWindow` | Fenêtres d'aide affichant les cartes et abaques |
-| `FilledInfos` | Informations saisies et tables réglementaires du DTU |
-| `MathsHelper` | Moteur de calcul (pression, épaisseurs, flèche) |
+| `MainWindow` | Welcome screen |
+| `WorkingWindow` | Main working window, where all input is collected |
+| `HelperWindow` | Help windows displaying the charts and maps |
+| `FilledInfos` | User input and the DTU regulatory tables |
+| `MathsHelper` | Calculation engine (pressure, thicknesses, deflection) |
 
-Les abaques du DTU — pressions de vent par région et par exposition, charges de neige par zone
-et par altitude, coefficients d'équivalence par type de glace — sont intégrées au logiciel,
-qui fonctionne donc sans connexion ni fichier de données externe.
+The DTU charts — wind pressures by region and exposure, snow loads by zone and altitude,
+equivalence coefficients by glass type — are embedded in the application, which therefore runs
+without any network connection or external data file.
 
-### Structure du dépôt
+### Layout
 
 ```
 DTUProject/
-└── GlassMetalProj/              Solution Visual Studio
+└── GlassMetalProj/              Visual Studio solution
     ├── GlassMetalProj/          Application
-    │   └── Images/              Cartes et abaques du DTU, logo
-    └── TestingCode/             Console de vérification des calculs
+    │   └── Images/              DTU charts and maps, logo
+    └── TestingCode/             Calculation check console
 ```
 
 ---
 
-## Installation et exécution
+## Setup
 
-### Prérequis
+### Requirements
 
 - **Windows**
-- **Visual Studio 2022** (17.10 ou ultérieur) avec la charge de travail
-  *Développement .NET Desktop*
+- **Visual Studio 2022** (17.10 or later) with the *.NET Desktop Development* workload
 - **.NET Framework 4.7.2 Developer Pack**
 
-### Installation des paquets
+### Packages
 
-Le projet utilise trois paquets NuGet : MahApps.Metro, ControlzEx et Microsoft.Xaml.Behaviors.Wpf.
+The project uses three NuGet packages: MahApps.Metro, ControlzEx and Microsoft.Xaml.Behaviors.Wpf.
 
-Dans Visual Studio, ils sont restaurés automatiquement à l'ouverture de la solution.
-Sinon, en ligne de commande depuis la racine du dépôt :
+Visual Studio restores them automatically when the solution is opened. Otherwise, from the
+repository root:
 
 ```
 nuget restore GlassMetalProj/GlassMetalProj.sln
 ```
 
-### Compilation
+### Build
 
-Ouvrir `GlassMetalProj/GlassMetalProj.sln` dans Visual Studio, vérifier que le projet de
-démarrage est bien **GlassMetalProj**, puis lancer la génération (`Ctrl+Maj+B`).
+Open `GlassMetalProj/GlassMetalProj.sln` in Visual Studio, make sure the startup project is
+**GlassMetalProj**, then build the solution (`Ctrl+Shift+B`).
 
-En ligne de commande :
+From the command line:
 
 ```
 msbuild GlassMetalProj/GlassMetalProj.sln /p:Configuration=Release
 ```
 
-### Exécution
+### Run
 
-Depuis Visual Studio, `F5` lance l'application.
+Press `F5` in Visual Studio to launch the application.
 
-Sinon, l'exécutable se trouve dans `GlassMetalProj/GlassMetalProj/bin/Release/`.
-Le dossier `Images` doit rester à côté de l'exécutable pour que les cartes d'aide s'affichent.
+Otherwise the executable is located in `GlassMetalProj/GlassMetalProj/bin/Release/`. The `Images`
+folder must remain alongside the executable for the help charts to display.
 
 ---
 
-## Glossaire
+## Glossary
 
-| Terme | Signification |
+| Term | Meaning |
 |---|---|
-| **DTU** | Document Technique Unifié — règles de l'art de la construction en France |
-| **Épaisseur de résistance** | Épaisseur équivalente du vitrage vis-à-vis de sa tenue mécanique |
-| **Flèche** | Déformation du vitrage sous la charge appliquée |
-| **Feuillure** | Rainure périphérique dans laquelle le vitrage est engagé |
-| **Bord libre** | Côté du vitrage non tenu en feuillure |
-| **Monolithique** | Vitrage constitué d'une seule glace |
-| **Feuilleté** | Plusieurs glaces assemblées par intercalaires |
-| **Isolant** | Vitrage à lame d'air, à 2 ou 3 composants séparés |
+| **DTU** | *Document Technique Unifié* — French building construction standards |
+| **Resistance thickness** | Equivalent thickness of the glazing with respect to mechanical strength |
+| **Deflection** | Deformation of the glazing under the applied load |
+| **Rebate** | Peripheral groove into which the glazing is set |
+| **Free edge** | Edge of the glazing not held in a rebate |
+| **Monolithic** | Glazing made of a single pane |
+| **Laminated** | Several panes bonded together by interlayers |
+| **Insulating** | Glazing with an air gap, with 2 or 3 separate components |
